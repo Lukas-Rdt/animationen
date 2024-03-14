@@ -14,9 +14,14 @@ export const animations = {
         transition: { duration: 1.5, ease: 'easeInOut' },
     },
 
-    textUp: {
+    textUp: (upValue) => ({
         opacity: 1,
-        //y: '-200%',
+        top: upValue,
+        transition: { duration: 1.5, ease: 'easeInOut' },
+    }),
+
+    textUP2: {
+        top: '30%',
         transition: { duration: 1.5, ease: 'easeInOut' },
     },
 
@@ -41,13 +46,13 @@ export const animations = {
     },
 
     setTextsHidden: {
-        opacity: 0,
+        //opacity: 0,
         transition: { duration: 0.1 },
     },
 
-    hiddenTextReset: {
+    hiddenTextReset: (yValue) => ({
         right: '50%',
-        y: 0,
+        top: yValue,
         transition: { duration: 0.1, delay: 1 },
-    },
+    }),
 }

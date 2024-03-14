@@ -21,6 +21,30 @@ function App() {
   // Progress in the module
   const [progress, setProgress] = useState(0);
 
+  const [textTopValuesMove, setTextTopValuesMove] = useState([
+    `calc(50% - 100px)`, `calc(40% + 50px)`, `calc(40% + 100px)`, `calc(40% + 150px)`
+  ]);
+
+  const [textTopBaseValues, setTextTopBaseValues] = useState([
+    "50%", `calc(50% + 50px)`, `calc(50% + 100px)`, `calc(50% + 150px)`
+  ]);
+
+  const updateTextTopValues = (index, newValue) => {
+    setTextTopValuesMove(prevState => {
+      const updatedValues = [...prevState];
+      updatedValues[index] = newValue;
+      return updatedValues;
+    });
+  };
+
+  const updateTextBaseTopValues = (index, newValue) => {
+    setTextTopBaseValues(prevState => {
+      const updatedValues = [...prevState];
+      updatedValues[index] = newValue;
+      return updatedValues;
+    });
+  };
+
   const titleList = [
     "Ein zentrales Werkzeug",
     "1. minimales Risiko",
@@ -53,10 +77,11 @@ function App() {
 
   // handles the correct animation
   const handleKeyPress = (event) => {
+    updateYValues();
     if (event.key === "ArrowLeft") {
       console.log("left arrow key");
     } else if (event.key === "ArrowRight") {
-      console.log("arrow key");
+      console.log("right arrow key");
       forwardAnimation();
     }
   };
@@ -68,47 +93,39 @@ function App() {
           graphicController.start(animations.rightGraphicIn),
           titleController.start(animations.leftTitleIn),
         ]);
+        textControllers.forEach((controller, i) => {
+          controller.start(animations.hiddenTextReset(textTopBaseValues[i]));
+          console.log(textTopBaseValues[i]);
+        })
         setAnimationSelection(2);
         break;
       case 2:
         await titleController.start(animations.leftTitleUp);
+        textControllers.forEach((controller, i) => {
+          controller.start(animations.hiddenTextReset(textTopBaseValues[i]));
+          console.log(textTopBaseValues[i]);
+        })
         setAnimationSelection(3);
         break;
       case 3:
-        switch (textProgress) {
-          case 0:
-            console.log("textprogress: " + textProgress);
-            textControllers[textProgress].start(animations.textUp);
-            setTextProgress(1);
-            break;
-          case 1:
-            console.log("textprogress: " + textProgress);
-            textControllers[textProgress].start(animations.textUp);
-            setTextProgress(2);
-            break;
-          case 2:
-            console.log("textprogress: " + textProgress);
-            textControllers[textProgress].start(animations.textUp);
-            if (textList[progress].length === 4) {
-              setTextProgress(3);
-            } else {
-              setAnimationSelection(4);
-              // Reset for text progress
-              setTextProgress(0);
-            }
-            break;
-          case 3:
-            console.log("textprogress: " + textProgress);
-            if (textList[progress].length === 4) {
-              textControllers[textProgress].start(animations.textUp);
-            }
+        console.log("textprogress: " + textProgress);
+        if (textProgress >= 0 && textProgress < textList[progress].length) {
+          console.log(textTopValuesMove[textProgress]);
+          console.log("Base Values: " + textTopBaseValues[textProgress]);
+          const upValue = textTopValuesMove[textProgress];
+          console.log(upValue);
+          textControllers[textProgress].start(animations.textUp(upValue));
+          //textControllers[textProgress].start(animations.textUP2);
+          console.log(textTopValuesMove[textProgress]);
+          if (textProgress === textList[progress].length - 1) {
             setAnimationSelection(4);
             // Reset for text progress
             setTextProgress(0);
-            break;
-          default:
-            console.log("Error: Unknown Text progress value");
-            break;
+          } else {
+            setTextProgress(textProgress + 1);
+          }
+        } else {
+        console.log("Invalid textProgress value");
         }
         break;
       case 4:
@@ -126,7 +143,7 @@ function App() {
           )
         );
         textControllers.map((controller) =>
-          controller.start(animations.hiddenTextReset)
+          controller.start(animations.hiddenTextReset(textTopBaseValues[1]))
         );
         setAnimationSelection(1);
         setProgress(1);
@@ -159,27 +176,49 @@ function App() {
     };
   });
 
-  const [secondDivY, setSecondDivY] = useState(`calc(50% + 50px)`);
-  const [thirdDivY, setThirdDivY] = useState(`calc(50% + 100px)`);
-  const [fourthDivY, setFourthDivY] = useState(`calc(50% + 150px)`);
-
-  useEffect(() => {
+  const updateYValues = () => {
     const textTwo = document.getElementsByClassName('textOne');
     const secondElement = textTwo[0];
     const height = secondElement.offsetHeight;
-    setSecondDivY(`calc(50% + ${height}px + 50px)`);
+    updateTextBaseTopValues(1, `calc(50% + ${height}px + 50px)`)
+    updateTextTopValues(1, `calc(50% + ${height}px - 50px)`);
 
     const textThree = document.getElementsByClassName('textThree');
     const thirdElement = textThree[0];
     const thirdHeight = thirdElement.offsetHeight;
-    setThirdDivY(`calc(50% + ${height}px + ${thirdHeight}px + 100px)`);
-    console.log("height 1: " + height + " 2 div: " + thirdDivY + " height 2: " + thirdHeight + " 3 div: " + thirdDivY);
+    updateTextBaseTopValues(2, `calc(50% + ${height}px + ${thirdHeight}px + 100px)`);
+    updateTextTopValues(2, `calc(50% + ${height}px + ${thirdHeight}px)`);
 
     const textFour = document.getElementsByClassName('textFour');
     const fourthElement = textFour[0];
     const fourthHeight = fourthElement.offsetHeight;
-    setFourthDivY(`calc(50% + ${height}px + ${thirdHeight}px + ${fourthHeight}px + 150px)`);
-  }, [animationSelection, secondDivY, thirdDivY, fourthDivY])
+    updateTextBaseTopValues(3, `calc(50% + ${height}px + ${thirdHeight}px + ${fourthHeight}px + 150px)`);
+    updateTextTopValues(3, `calc(50% + ${height}px + ${thirdHeight}px + ${fourthHeight}px + 50px)`);
+  }
+
+  // Calculate the correct top values for the text elements
+
+  /*
+  useEffect(() => {
+    const textTwo = document.getElementsByClassName('textOne');
+    const secondElement = textTwo[0];
+    const height = secondElement.offsetHeight;
+    updateTextBaseTopValues(1, `calc(50% + ${height}px + 50px)`)
+    updateTextTopValues(1, `calc(50% + ${height}px - 50px)`);
+
+    const textThree = document.getElementsByClassName('textThree');
+    const thirdElement = textThree[0];
+    const thirdHeight = thirdElement.offsetHeight;
+    updateTextBaseTopValues(2, `calc(50% + ${height}px + ${thirdHeight}px + 100px)`);
+    updateTextTopValues(2, `calc(50% + ${height}px + ${thirdHeight}px)`);
+
+    const textFour = document.getElementsByClassName('textFour');
+    const fourthElement = textFour[0];
+    const fourthHeight = fourthElement.offsetHeight;
+    updateTextBaseTopValues(3, `calc(50% + ${height}px + ${thirdHeight}px + ${fourthHeight}px + 150px)`);
+    updateTextTopValues(3, `calc(50% + ${height}px + ${thirdHeight}px + ${fourthHeight}px + 50px)`);
+  }, [animationSelection])
+  */
 
   return (
     <div
@@ -195,8 +234,8 @@ function App() {
       }}>
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: "80%",
+          height: "80%",
           overflow: "hidden",
           position: "relative",
           backgroundColor: "#f0f0f0",
@@ -221,37 +260,17 @@ function App() {
           <Title titleText={titleList[progress]} />
         </motion.div>
 
-        {/* Text Animation Containers -- translateYValue: difference in position of consequent texts -> 500 * index is the distance, should be variable for responsiveness*/}
-        {/*
-        {textList[progress].map((text, index) => {
-          const yValue = index === 0 ? "50%" : `${50 + 10 * index}%`;
-
-          return (
-            <motion.div
-              key={index}
-              animate={textControllers[index]}
-              initial={{
-                position: "absolute",
-                opacity: 0,
-                right: "50%",
-                top: yValue,
-              }}
-              style={{ width: "50%", top: "50%" }}>
-              <Text text={text} />
-            </motion.div>
-          );
-        })}
-      */}
-
+        {/* Text Animation Containers */}
         <motion.div
           className="textOne"
           animate={textControllers[0]}
           initial={{
             position: "absolute",
-            opacity: 1,
+            opacity: 0.25,
             right: "50%",
+            top: textTopBaseValues[0]
           }}
-          style={{ width: "50%", top: "50%" }}>
+          style={{ width: "50%" }}>
           <Text text={textList[progress][0]} />
         </motion.div>
 
@@ -260,10 +279,11 @@ function App() {
           animate={textControllers[1]}
           initial={{
             position: "absolute",
-            opacity: 1,
+            opacity: 0.25,
             right: "50%",
+            top: textTopBaseValues[1]
           }}
-          style={{ width: "50%", top: secondDivY }}>
+          style={{ width: "50%" }}>
           <Text text={textList[progress][1]} />
         </motion.div>
 
@@ -272,10 +292,11 @@ function App() {
           animate={textControllers[2]}
           initial={{
             position: "absolute",
-            opacity: 1,
-            right: "50%"
+            opacity: 0.25,
+            right: "50%",
+            top: textTopBaseValues[2]
           }}
-          style={{ width: "50%", top: thirdDivY }}>
+          style={{ width: "50%" }}>
           <Text text={"text x y was weiß ich"} />
         </motion.div>
 
@@ -284,10 +305,11 @@ function App() {
           animate={textControllers[3]}
           initial={{
             position: "absolute",
-            opacity: 0,
-            right: "50%"
+            opacity: 0.25,
+            right: "50%",
+            top: textTopBaseValues[3]
           }}
-          style={{ width: "50%", top: fourthDivY }}>
+          style={{ width: "50%" }}>
           <Text text={"text hundert 2"} />
         </motion.div>
       </div>
