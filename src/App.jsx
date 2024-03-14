@@ -1,35 +1,53 @@
-import { useState, useEffect } from 'react'
-import { motion, useAnimation } from 'framer-motion';
-import { animations } from './animations';
-import Title from './Title';
-import { GraphicContainer } from './GraphicContainer';
-import { Text } from './Text';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { animations } from "./animations";
+import Title from "./Title";
+import { GraphicContainer } from "./GraphicContainer";
+import { Text } from "./Text";
 // import images in module "parent"
-import bild1 from './assets/Bild1.gif'
-import bild2 from './assets/Bild2.gif'
+import bild1 from "./assets/Bild1.gif";
+import bild2 from "./assets/Bild2.gif";
 
 function App() {
-  /** 
-   * 1 = title + graphic 
+  /**
+   * 1 = title + graphic
    * 2 = move title up
    * 3 = loop with texts
    * 4 = remove all + increase progress
-  */
+   */
   const [animationSelection, setAnimationSelection] = useState(1);
   const [textProgress, setTextProgress] = useState(0);
   // Progress in the module
   const [progress, setProgress] = useState(0);
 
-  const titleList = ["Ein zentrales Werkzeug", "1. minimales Risiko", "2. begrenztes Risiko", "3. hohes Risiko", "4. Inakzeptables Risiko", "Ein kleines Fazit", "Herzlichen Dank!"];
+  const titleList = [
+    "Ein zentrales Werkzeug",
+    "1. minimales Risiko",
+    "2. begrenztes Risiko",
+    "3. hohes Risiko",
+    "4. Inakzeptables Risiko",
+    "Ein kleines Fazit",
+    "Herzlichen Dank!",
+  ];
   const imageList = [
-    { type: 'image', src: bild1, alt: 'Bild 1' },
-    { type: 'image', src: bild2, alt: 'Bild 2' },
-    { type: 'image', src: bild2, alt: 'Bild 4' },
+    { type: "image", src: bild1, alt: "Bild 1" },
+    { type: "image", src: bild2, alt: "Bild 2" },
+    { type: "image", src: bild2, alt: "Bild 4" },
   ];
 
   const textList = [
-    ["Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang. Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang.", "Progress: 1, Text: 2", "Progress: 1, Text: 3"],
-    ["Progress: 2, Text: 1", "Progress: 2, Text: 2", "Progress: 2, Text: 3", "Progress: 2, Text: 4"],
+    [
+      "Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang. Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang.",
+      "Progress: 1, Text: 2",
+      "Progress: 1, Text: 3",
+    ],
+    [
+      "Progress: 2, Text: 1",
+      "Progress: 2, Text: 2",
+      "Progress: 2, Text: 3",
+      "Progress: 2, Text: 4",
+    ],
     ["Progress: 3, Text: 1", "Progress: 3, Text: 2", "Progress: 3, Text: 3"],
   ];
 
@@ -44,7 +62,6 @@ function App() {
   };
 
   const forwardAnimation = async () => {
-
     switch (animationSelection) {
       case 1:
         await Promise.all([
@@ -98,13 +115,19 @@ function App() {
         await Promise.all([
           graphicController.start(animations.rightGraphicOut),
           titleController.start(animations.leftTitleOut),
-          ...textList[progress].map((_, i) => textControllers[i].start(animations.leftTextOut)),
-        ])
+          ...textList[progress].map((_, i) =>
+            textControllers[i].start(animations.leftTextOut)
+          ),
+        ]);
         Promise.all(
           titleController.start(animations.hiddenTitleReset),
-          ...textList[progress].map((_, i) => textControllers[i].start(animations.setTextsHidden)),
-        )
-        textControllers.map((controller) => controller.start(animations.hiddenTextReset));
+          ...textList[progress].map((_, i) =>
+            textControllers[i].start(animations.setTextsHidden)
+          )
+        );
+        textControllers.map((controller) =>
+          controller.start(animations.hiddenTextReset)
+        );
         setAnimationSelection(1);
         setProgress(1);
         break;
@@ -113,110 +136,163 @@ function App() {
         setProgress(1);
         break;
     }
-  }
+  };
 
   // assignment to animation controller
   const graphicController = useAnimation();
   const titleController = useAnimation();
-  {/* sure there is a better solution than this */ }
+  
+  {/* sure there is a better solution than this */}
   const textControllers = [
     useAnimation(),
     useAnimation(),
     useAnimation(),
     useAnimation(),
-  ]
-
+  ];
 
   // temporary controls for moving the animations
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress);
+    document.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyPress);
+      document.removeEventListener("keydown", handleKeyPress);
     };
   });
 
-  const calculateOffset = (index) => {
-    let offset = 0;
-    for (let i = 0; i < index; i++) {
-      // Hier kannst du die gewünschte Höhe für den Abstand einstellen, z.B., 10 Pixel.
-      offset += textList[progress][i].split('\n').length * 10;
-    }
-    return offset;
-  };
+  const [secondDivY, setSecondDivY] = useState(`calc(50% + 50px)`);
+  const [thirdDivY, setThirdDivY] = useState(`calc(50% + 100px)`);
+  const [fourthDivY, setFourthDivY] = useState(`calc(50% + 150px)`);
+
+  useEffect(() => {
+    const textTwo = document.getElementsByClassName('textOne');
+    const secondElement = textTwo[0];
+    const height = secondElement.offsetHeight;
+    setSecondDivY(`calc(50% + ${height}px + 50px)`);
+
+    const textThree = document.getElementsByClassName('textThree');
+    const thirdElement = textThree[0];
+    const thirdHeight = thirdElement.offsetHeight;
+    setThirdDivY(`calc(50% + ${height}px + ${thirdHeight}px + 100px)`);
+    console.log("height 1: " + height + " 2 div: " + thirdDivY + " height 2: " + thirdHeight + " 3 div: " + thirdDivY);
+
+    const textFour = document.getElementsByClassName('textFour');
+    const fourthElement = textFour[0];
+    const fourthHeight = fourthElement.offsetHeight;
+    setFourthDivY(`calc(50% + ${height}px + ${thirdHeight}px + ${fourthHeight}px + 150px)`);
+  }, [animationSelection, secondDivY, thirdDivY, fourthDivY])
 
   return (
     <div
       style={{
         margin: 0,
         padding: 0,
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'gray',
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "gray",
       }}>
       <div
         style={{
-          width: '100%',
-          height: '100%',
-          overflow: 'hidden',
-          position: 'relative',
-          backgroundColor: '#f0f0f0',
-        }}
-      >
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+          position: "relative",
+          backgroundColor: "#f0f0f0",
+        }}>
         {/* Graphic Animation Container -- the style is for vertically centering, pos = absolute and left = 100% necessary to be out of parent */}
-        <motion.div animate={graphicController} initial={{ position: 'absolute', left: '100%' }} style={{ width: '50%', top: '50%', transform: 'translateY(-50%)' }}>
-          <GraphicContainer type={imageList[progress].type} src={imageList[progress].src} altText={imageList[progress].alt} />
+        <motion.div
+          animate={graphicController}
+          initial={{ position: "absolute", left: "100%" }}
+          style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
+          <GraphicContainer
+            type={imageList[progress].type}
+            src={imageList[progress].src}
+            altText={imageList[progress].alt}
+          />
         </motion.div>
 
         {/* Title Animation Container --  */}
-        <motion.div animate={titleController} initial={{ position: 'absolute', right: '100%' }} style={{ width: '50%', top: '50%', transform: 'translateY(-50%)' }}>
+        <motion.div
+          animate={titleController}
+          initial={{ position: "absolute", right: "100%" }}
+          style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
           <Title titleText={titleList[progress]} />
         </motion.div>
 
         {/* Text Animation Containers -- translateYValue: difference in position of consequent texts -> 500 * index is the distance, should be variable for responsiveness*/}
         {/*
-
         {textList[progress].map((text, index) => {
-          const yValue = index === 0 ? '50%' : `${50 + 10 * index}%`;
+          const yValue = index === 0 ? "50%" : `${50 + 10 * index}%`;
 
           return (
             <motion.div
               key={index}
               animate={textControllers[index]}
-              initial={{ position: 'absolute', opacity: 0, right: '50%', top: yValue }}
-              style={{ width: '50%', top: '50%' }}
-            >
+              initial={{
+                position: "absolute",
+                opacity: 0,
+                right: "50%",
+                top: yValue,
+              }}
+              style={{ width: "50%", top: "50%" }}>
               <Text text={text} />
             </motion.div>
-          )
+          );
         })}
-                          */}
+      */}
 
+        <motion.div
+          className="textOne"
+          animate={textControllers[0]}
+          initial={{
+            position: "absolute",
+            opacity: 1,
+            right: "50%",
+          }}
+          style={{ width: "50%", top: "50%" }}>
+          <Text text={textList[progress][0]} />
+        </motion.div>
 
-        {/* 
-        
-        const yValue = index === 0 ? '50%' : `calc(50% + ${calculateOffset(index)}%)`;
-                        */}
-        {textList[progress].map((text, index) => {
+        <motion.div
+          className="textTwo"
+          animate={textControllers[1]}
+          initial={{
+            position: "absolute",
+            opacity: 1,
+            right: "50%",
+          }}
+          style={{ width: "50%", top: secondDivY }}>
+          <Text text={textList[progress][1]} />
+        </motion.div>
 
-          return (
-            <motion.div
-              key={index}
-              animate={textControllers[index]}
-              initial={{ position: 'absolute', opacity: 0, right: '50%', bottom: '50%' }}
-              style={{ width: '50%' }}
-            >
-              <Text text={text} />
-            </motion.div>
-          )
-        })}
+        <motion.div
+          className="textThree"
+          animate={textControllers[2]}
+          initial={{
+            position: "absolute",
+            opacity: 1,
+            right: "50%"
+          }}
+          style={{ width: "50%", top: thirdDivY }}>
+          <Text text={"text x y was weiß ich"} />
+        </motion.div>
 
+          <motion.div
+          className="textFour"
+          animate={textControllers[3]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%"
+          }}
+          style={{ width: "50%", top: fourthDivY }}>
+          <Text text={"text hundert 2"} />
+        </motion.div>
       </div>
     </div>
   );
 }
 
-export default App
+export default App;
