@@ -1,18 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
+import PropTypes from "prop-types";
 import { motion, useAnimation } from "framer-motion";
 import { animations } from "./animations";
 import Title from "./Title";
 import { GraphicContainer } from "./GraphicContainer";
 import { Text } from "./Text";
-// import images in module "parent"
-import bild1 from "./assets/Bild1.gif";
-import bild2 from "./assets/Bild2.gif";
 
-import AnimationContainer from "./AnimationContainer";
-
-function App() {
-  const childComponentRef = useRef(null);
+function AnimationContainer({ titleList, imageList, textList }) {
   /**
    * 1 = title + graphic
    * 2 = move title up
@@ -42,36 +37,6 @@ function App() {
       return updatedValues;
     });
   };
-
-  const titleList = [
-    "Ein zentrales Werkzeug",
-    "1. minimales Risiko",
-    "2. begrenztes Risiko",
-    "3. hohes Risiko",
-    "4. Inakzeptables Risiko",
-    "Ein kleines Fazit",
-    "Herzlichen Dank!",
-  ];
-  const imageList = [
-    { type: "image", src: bild1, alt: "Bild 1" },
-    { type: "image", src: bild2, alt: "Bild 2" },
-    { type: "image", src: bild2, alt: "Bild 4" },
-  ];
-
-  const textList = [
-    [
-      "Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang. Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang.",
-      "Progress: 1, Text: 2",
-      "Progress: 1, Text: 3",
-    ],
-    [
-      "Progress: 2, Text: 1",
-      "Progress: 2, Text: 2",
-      "Progress: 2, Text: 3",
-      "Progress: 2, Text: 4",
-    ],
-    ["Progress: 3, Text: 1", "Progress: 3, Text: 2", "Progress: 3, Text: 3"],
-  ];
 
   // handles the correct animation
   const handleKeyPress = (event) => {
@@ -238,17 +203,15 @@ function App() {
   ];
 
   // temporary controls for moving the animations
+  /*
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      childComponentRef.current.handleKeyPress(event.key);
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  });
+  */
 
   // Calculate the correct top values for the text elements
   const updateYValues = () => {
@@ -297,19 +260,6 @@ function App() {
   };
 
   return (
-    <div
-      style={{
-        margin: 0,
-        padding: 0,
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "gray",
-        overflow: "hidden",
-      }}>
-        {/*
       <div
         style={{
           width: "80%",
@@ -317,6 +267,7 @@ function App() {
           position: "relative",
           backgroundColor: "#f0f0f0",
         }}>
+        {/* Steurung über den Bidlschirm */}
         <div
           style={{
             width: "50%",
@@ -345,7 +296,7 @@ function App() {
             handleKeyPress({ key: "ArrowRight" });
           }}></div>
 
-
+        {/* Graphic Animation Container -- the style is for vertically centering, pos = absolute and left = 100% necessary to be out of parent */}
         <motion.div
           animate={graphicController}
           initial={{ position: "absolute", left: "100%" }}
@@ -357,7 +308,7 @@ function App() {
           />
         </motion.div>
 
-
+        {/* Title Animation Container --  */}
         <motion.div
           className="title"
           animate={titleController}
@@ -366,6 +317,7 @@ function App() {
           <Title titleText={titleList[progress]} />
         </motion.div>
 
+        {/* Text Animation Containers */}
         <motion.div
           className="textOne"
           animate={textControllers[0]}
@@ -418,12 +370,21 @@ function App() {
           <Text text={"text hundert 2"} />
         </motion.div>
       </div>
-      */}
-
-      <AnimationContainer titleList={titleList} imageList={imageList} textList={textList} ref={childComponentRef} />
-
-    </div>
   );
 }
 
-export default App;
+
+AnimationContainer.propTypes = {
+    titleList: PropTypes.arrayOf(PropTypes.string).isRequired,
+    imageList: PropTypes.arrayOf(
+        PropTypes.shape({
+            type: PropTypes.string.isRequired,
+            src: PropTypes.string.isRequired,
+            alt: PropTypes.string.isRequired,
+        })
+        ).isRequired,
+        textList: PropTypes.arrayOf(
+            PropTypes.arrayOf(PropTypes.string)
+            ).isRequired,
+};
+export default AnimationContainer;

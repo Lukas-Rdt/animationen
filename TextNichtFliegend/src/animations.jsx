@@ -14,15 +14,39 @@ export const animations = {
         transition: { duration: 1.5, ease: 'easeInOut' },
     },
 
-    textUp: (upValue) => ({
-        opacity: 1,
-        top: upValue,
+    resetTitleMid: {
+        top: '50%',
         transition: { duration: 1.5, ease: 'easeInOut' },
-    }),
+    },
+    
+    hiddenTitleReset: {
+        top: '50%',
+        transition: { duration: 0.1 },
+    },
 
-    textUP2: {
-        top: '30%',
+    hiddenTitleSetUp: {
+        top: '20%',
+        transition: { duration: 0.1 },
+    },
+
+    textOp: {
+        opacity: 1,
         transition: { duration: 1.5, ease: 'easeInOut' },
+    },
+
+    resetTextOp: {
+        opacity: 0,
+        transition: { duration: 1.5, ease: 'easeInOut' },
+    },
+
+    setTextsHidden: {
+        opacity: 0,
+        transition: { duration: 0.1 },
+    },
+
+    hiddenTextOp: {
+        opacity: 1,
+        transition: { duration: 0.1 },
     },
 
     rightGraphicOut: {
@@ -40,17 +64,18 @@ export const animations = {
         transition: { duration: 1.5, ease: 'easeInOut' },
     },
 
-    hiddenTitleReset: {
-        top: '50%',
-        transition: { duration: 0.1 },
-    },
-
-    setTextsHidden: {
-        //opacity: 0,
-        transition: { duration: 0.1 },
+    leftTextIn: {
+        right: '50%',
+        transition: { duration: 1.5, ease: 'easeInOut' },
     },
 
     hiddenTextReset: (yValue) => ({
+        //right: '50%',
+        top: yValue,
+        transition: { duration: 0.1 },
+    }),
+
+    hiddenTextResetDelay: (yValue) => ({
         right: '50%',
         top: yValue,
         transition: { duration: 0.1, delay: 1 },
