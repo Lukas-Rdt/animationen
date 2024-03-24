@@ -239,16 +239,12 @@ function App() {
 
   // temporary controls for moving the animations
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      childComponentRef.current.handleKeyPress(event.key);
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  });
 
   // Calculate the correct top values for the text elements
   const updateYValues = () => {
@@ -297,19 +293,22 @@ function App() {
   };
 
   return (
+
+    
     <div
-      style={{
-        margin: 0,
-        padding: 0,
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "gray",
-        overflow: "hidden",
-      }}>
-        {/*
+    style={{
+      margin: 0,
+      padding: 0,
+      width: "100vw",
+      height: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "gray",
+      overflow: "hidden",
+    }}>
+        <AnimationContainer titleList={titleList} imageList={imageList} textList={textList} />
+      {/* 
       <div
         style={{
           width: "80%",
@@ -418,11 +417,10 @@ function App() {
           <Text text={"text hundert 2"} />
         </motion.div>
       </div>
-      */}
-
-      <AnimationContainer titleList={titleList} imageList={imageList} textList={textList} ref={childComponentRef} />
-
+    */}
     </div>
+
+
   );
 }
 
