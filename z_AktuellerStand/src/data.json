@@ -1,0 +1,29 @@
+{
+    "Name": "DemoProjekt",
+    "Texte": [
+        "Hier ist der erste Text der auf der Seiten geschrieben sein soll",
+        "Das ist der zweite Text",
+        "Je nach dem wie viele man hier reinschreibt gibt es Einträge (Mit den Farben muss man nochmal gucken wie man das macht. Außerdem ist die Reihenfolge wichtig."
+    ],
+    "isVideo": true,
+    "isAnimation": true,
+    "Video": {
+        "titel": "Video überschrift",
+        "link": "https://www.youtube-nocookie.com/embed/LDvVRvG7OB0?si=R1yp1rZWo-kn1qo0&amp;rel=0&amp;modestbranding=1"
+    },
+    "Animationen": {
+        "überschriften": [
+            "Animationsüberschrift 1",
+            "Überschrift 2",
+            "Überschrift 3"
+        ],
+        "bilder": [
+            {"type": "image/video: je nach dem was man hat", "src": "bild 1", "alt": "alt text"}
+        ],
+        "stichpunkte": [
+            ["Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang. Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang.", "Progress: 1, Text: 2", "Progress: 1, Text: 3"],
+            ["Progress: 2, Text: 1", "Progress: 2, Text: 2", "Progress: 2, Text: 3", "Progress: 2, Text: 4"],
+            ["Progress: 3, Text: 1", "Progress: 3, Text: 2", "Progress: 3, Text: 3"]
+        ]
+    }
+}
