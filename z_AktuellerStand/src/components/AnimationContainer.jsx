@@ -4,61 +4,11 @@ import { animations } from "./animations";
 import { GraphicContainer } from "./GraphicContainer";
 import { AnimationTitle } from "./AnimationTitle";
 import { AnimationText } from "./AnimationText";
-import exampleImg from '../assets/images/exampleImg.gif';
 import { AnimationData } from "./AnimationData";
 
 function AnimationContainer({ topicName }) {
 
-    /* { titleList, imageList, textList } -- prop */
-    const titleList = [
-        "Ein zentrales Werkzeug",
-        "1. minimales Risiko",
-        "2. begrenztes Risiko",
-        "3. hohes Risiko",
-        "4. Inakzeptables Risiko",
-        "Ein kleines Fazit",
-        "Herzlichen Dank!",
-      ];
-
-      const imageList = [
-        { type: "image", src: exampleImg, alt: "Bild 1" },
-        { type: "image", src: exampleImg, alt: "Bild 2" },
-        { type: "image", src: exampleImg, alt: "Bild 4" },
-      ];
-    
-      const textList = [
-        [
-          "Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang. Progress: 1, Text: 1, das ist ein deutlich längerer text. Dieser Text ist sehr lang sehr sehr lang.",
-          "Progress: 1, Text: 2",
-          "Progress: 1, Text: 3",
-        ],
-        [
-          "Progress: 2, Text: 1",
-          "Progress: 2, Text: 2",
-          "Progress: 2, Text: 3",
-          "Progress: 2, Text: 4",
-        ],
-        ["Progress: 3, Text: 1", "Progress: 3, Text: 2", "Progress: 3, Text: 3"],
-      ];
-
-  const [titles, setTitles] = useState([]);
-  const [images, setImages] = useState([]);
-  const [texts, setTexts] = useState([]);
-
-  useEffect(() => {
-    if (topicName in AnimationData) {
-      //const { Titel, Bilder, Stichpunkte } = AnimationData[topicName];
-      setTitles(AnimationData[topicName].Titel);
-      setImages(AnimationData[topicName].Bilder);
-      setTexts(AnimationData[topicName].Stichpunkte);
-    }
-  }, [topicName])
-
-  useEffect(() => {
-    console.log("Titel: " + titles);
-    console.log("Images: " + images);
-    console.log("Texts: " + texts);
-  }, [titles, images, texts])
+  const animationDataContent = AnimationData[topicName];
 
   /**
    * 1 = title + graphic
@@ -143,11 +93,11 @@ function AnimationContainer({ topicName }) {
         break;
       case 3:
         console.log("textprogress: " + textProgress);
-        if (textProgress >= 0 && textProgress < texts[progress].length) {
+        if (textProgress >= 0 && textProgress < animationDataContent.Stichpunkte[progress].length) {
           console.log(textTopValuesMove[textProgress]);
           textControllers[textProgress].start(animations.textOp);
           console.log(textTopValuesMove[textProgress]);
-          if (textProgress === texts[progress].length - 1) {
+          if (textProgress === animationDataContent.Stichpunkte[progress].length - 1) {
             setAnimationSelection(4);
             // Reset for text progress
             setTextProgress(0);
@@ -177,7 +127,7 @@ function AnimationContainer({ topicName }) {
         setAnimationSelection(1);
         setLastProgress(progress);
         // move to useState when starting component
-        const minLegnth = Math.min(titles.length, images.length, texts.length);
+        const minLegnth = Math.min(animationDataContent.Titel.length, animationDataContent.Bilder.length, animationDataContent.Stichpunkte.length);
         if (progress < minLegnth - 1) {
           setProgress((prevProgress) => prevProgress + 1);
         }
@@ -199,7 +149,7 @@ function AnimationContainer({ topicName }) {
         updateYValues();
 
         // texte von außen reinfliegen lassen
-        setTextProgress(texts[progress].length);
+        setTextProgress(animationDataContent.Stichpunkte[progress].length);
         titleController.start(animations.hiddenTitleSetUp);
         /*
         textControllers.forEach((controller, i) => {
@@ -214,7 +164,7 @@ function AnimationContainer({ topicName }) {
           textControllers.forEach((controller) => {
             controller.start(animations.leftTextIn);
           }),
-          ...texts[progress - 1].map((_, i) => {
+          ...animationDataContent.Stichpunkte[progress - 1].map((_, i) => {
             textControllers[i].start(animations.hiddenTextOp);
           }),
         ]);
@@ -244,10 +194,10 @@ function AnimationContainer({ topicName }) {
         break;
       case 4:
         // auf text progress textlist length zurück
-        textControllers[texts[progress].length - 1].start(
+        textControllers[animationDataContent.Stichpunkte[progress].length - 1].start(
           animations.resetTextOp
         );
-        setTextProgress(texts[progress].length - 1);
+        setTextProgress(animationDataContent.Stichpunkte[progress].length - 1);
         setAnimationSelection(3);
         break;
       default:
@@ -359,13 +309,11 @@ function AnimationContainer({ topicName }) {
         animate={graphicController}
         initial={{ position: "absolute", left: "100%" }}
         style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
-          {images != null ? (
-            <GraphicContainer
-            type={imageList[progress].type}
-            src={imageList[progress].src}
-            altText={imageList[progress].alt}
+          <GraphicContainer
+          type={animationDataContent.Bilder[progress].type}
+            src={animationDataContent.Bilder[progress].src}
+            altText={animationDataContent.Bilder[progress].alt}
             />
-            ) : <div></div>}
       </motion.div>
 
       {/* Title Animation Container --  */}
@@ -374,7 +322,7 @@ function AnimationContainer({ topicName }) {
         animate={titleController}
         initial={{ position: "absolute", right: "100%" }}
         style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
-        <AnimationTitle titleText={titleList[progress]} />
+        <AnimationTitle titleText={animationDataContent.Titel[progress]} />
       </motion.div>
 
       {/* Text Animation Containers */}
@@ -388,7 +336,7 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[0],
         }}
         style={{ width: "50%" }}>
-        <AnimationText text={textList[progress][0]} />
+          <AnimationText text={animationDataContent.Stichpunkte[progress][0]} />
       </motion.div>
 
       <motion.div
@@ -401,7 +349,7 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[1],
         }}
         style={{ width: "50%" }}>
-        <AnimationText text={textList[progress][1]} />
+            <AnimationText text={animationDataContent.Stichpunkte[progress][1]} />
       </motion.div>
 
       <motion.div
@@ -414,7 +362,7 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[2],
         }}
         style={{ width: "50%" }}>
-        <AnimationText text={textList[progress][2]} />
+        <AnimationText text={animationDataContent.Stichpunkte[progress][2]} />
       </motion.div>
 
       <motion.div
@@ -427,7 +375,7 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[3],
         }}
         style={{ width: "50%" }}>
-        <AnimationText text={textList[progress][3]} />
+        <AnimationText text={animationDataContent.Stichpunkte[progress][3]} />
       </motion.div>
       </div>
     </div>
