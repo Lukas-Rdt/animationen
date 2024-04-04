@@ -1,6 +1,6 @@
 /* General */
 * {
-  font-family: 'Open Sans', 'sans serif';
+  font-family: "Open Sans", sans-serif;
   font-weight: 400;
   font-size: calc(10px + 1vmin);
   color: #21202b;
@@ -19,24 +19,20 @@
 /* Layout */
 .Header {
   height: 10%;
-  width: 85%;
-  margin-left: 15%;
+  width: 100%;
 }
 
 .Mainpage {
-  width: 85%;
-  margin-left: 15%;
+  width: 100%;
 }
 
 .SubTopicPage {
-  width: 85%;
-  margin-left: 15%;
+  width: 100%;
 }
 
 .Footer {
   height: 6%;
-  width: 85%;
-  margin-left: 15%;
+  width: 100%;
 }
 
 .Footer a {
@@ -99,12 +95,12 @@
   padding: 10px;
   border-radius: 10px;
   margin: 10px;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   width: 85%;
 }
 
-.arrow-btn>.arrow {
+.arrow-btn > .arrow {
   width: 11px;
   height: 11px;
   border-right: 2px solid #21202b;
@@ -112,10 +108,10 @@
   position: relative;
   transform: rotate(-45deg);
   margin: 0 6px;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
-.arrow-btn>.arrow::before {
+.arrow-btn > .arrow::before {
   display: block;
   background-color: currentColor;
   width: 3px;
@@ -125,16 +121,16 @@
   opacity: 0;
   bottom: calc(-2px / 2);
   transform: rotate(45deg);
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   content: "";
   right: 0;
 }
 
-.arrow-btn:hover>.arrow {
+.arrow-btn:hover > .arrow {
   transform: rotate(-45deg) translate(5px, 5px);
 }
 
-.arrow-btn:hover>.arrow::before {
+.arrow-btn:hover > .arrow::before {
   opacity: 1;
   width: 10px;
   border-radius: 10px;
