@@ -79,7 +79,12 @@ function AnimationContainer({ topicName }) {
           titleController.start(animations.leftTitleIn),
           textControllers.map(controller => controller.start(animations.leftTitleIn))
         ]);
-        setAnimationSelection(2);
+        // check if only title element is present -> Selection(4)
+        if (animationDataContent.Content[progress].Texts.length === 1) {
+          setAnimationSelection(4);
+        } else {
+          setAnimationSelection(2);
+        }
         break;
       case 2:
         console.log("case 2 textprogress: " + textProgress);
@@ -93,11 +98,11 @@ function AnimationContainer({ topicName }) {
         break;
       case 3:
         console.log("textprogress: " + textProgress);
-        if (textProgress >= 0 && textProgress < animationDataContent.Stichpunkte[progress].length) {
+        if (textProgress >= 0 && textProgress < animationDataContent.Content[progress].Texts.length - 1) {
           console.log(textTopValuesMove[textProgress]);
           textControllers[textProgress].start(animations.textOp);
           console.log(textTopValuesMove[textProgress]);
-          if (textProgress === animationDataContent.Stichpunkte[progress].length - 1) {
+          if (textProgress === animationDataContent.Content[progress].Texts.length - 2) {
             setAnimationSelection(4);
             // Reset for text progress
             setTextProgress(0);
@@ -127,8 +132,7 @@ function AnimationContainer({ topicName }) {
         setAnimationSelection(1);
         setLastProgress(progress);
         // move to useState when starting component
-        const minLegnth = Math.min(animationDataContent.Titel.length, animationDataContent.Bilder.length, animationDataContent.Stichpunkte.length);
-        if (progress < minLegnth - 1) {
+        if (progress < animationDataContent.Content.length - 1) {
           setProgress((prevProgress) => prevProgress + 1);
         }
         break;
@@ -149,7 +153,7 @@ function AnimationContainer({ topicName }) {
         updateYValues();
 
         // texte von außen reinfliegen lassen
-        setTextProgress(animationDataContent.Stichpunkte[progress].length);
+        setTextProgress(animationDataContent.Content[progress].Texts.length - 1);
         titleController.start(animations.hiddenTitleSetUp);
         /*
         textControllers.forEach((controller, i) => {
@@ -164,7 +168,7 @@ function AnimationContainer({ topicName }) {
           textControllers.forEach((controller) => {
             controller.start(animations.leftTextIn);
           }),
-          ...animationDataContent.Stichpunkte[progress - 1].map((_, i) => {
+          ...animationDataContent.Content[progress - 1].Texts.map((_, i) => {
             textControllers[i].start(animations.hiddenTextOp);
           }),
         ]);
@@ -194,10 +198,10 @@ function AnimationContainer({ topicName }) {
         break;
       case 4:
         // auf text progress textlist length zurück
-        textControllers[animationDataContent.Stichpunkte[progress].length - 1].start(
+        textControllers[animationDataContent.Content[progress].Texts.length - 1].start(
           animations.resetTextOp
         );
-        setTextProgress(animationDataContent.Stichpunkte[progress].length - 1);
+        setTextProgress(animationDataContent.Content[progress].Texts.length - 1);
         setAnimationSelection(3);
         break;
       default:
@@ -310,22 +314,21 @@ function AnimationContainer({ topicName }) {
         initial={{ position: "absolute", left: "100%" }}
         style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
           <GraphicContainer
-          type={animationDataContent.Bilder[progress].type}
-            src={animationDataContent.Bilder[progress].src}
-            altText={animationDataContent.Bilder[progress].alt}
+          type={animationDataContent.Content[progress].Image.typeImg}
+          src={animationDataContent.Content[progress].Image.src}
+          altText={animationDataContent.Content[progress].Image.alt}
             />
       </motion.div>
 
-      {/* Title Animation Container --  */}
+      {/* Text Animation Container --  */}
       <motion.div
         className="title"
         animate={titleController}
         initial={{ position: "absolute", right: "100%" }}
         style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
-        <AnimationTitle titleText={animationDataContent.Titel[progress]} />
+        <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[0].string} />
       </motion.div>
 
-      {/* Text Animation Containers */}
       <motion.div
         className="textOne"
         animate={textControllers[0]}
@@ -336,7 +339,9 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[0],
         }}
         style={{ width: "50%" }}>
-          <AnimationText text={animationDataContent.Stichpunkte[progress][0]} />
+          {animationDataContent.Content[progress].Texts.length >= 2 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
+          ) : null}
       </motion.div>
 
       <motion.div
@@ -349,7 +354,9 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[1],
         }}
         style={{ width: "50%" }}>
-            <AnimationText text={animationDataContent.Stichpunkte[progress][1]} />
+          {animationDataContent.Content[progress].Texts.length >= 3 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[2].string} />
+          ) : null}
       </motion.div>
 
       <motion.div
@@ -362,7 +369,9 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[2],
         }}
         style={{ width: "50%" }}>
-        <AnimationText text={animationDataContent.Stichpunkte[progress][2]} />
+          {animationDataContent.Content[progress].Texts.length >= 4 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[3].string} />
+          ) : null}
       </motion.div>
 
       <motion.div
@@ -375,7 +384,9 @@ function AnimationContainer({ topicName }) {
           top: textTopValuesMove[3],
         }}
         style={{ width: "50%" }}>
-        <AnimationText text={animationDataContent.Stichpunkte[progress][3]} />
+          {animationDataContent.Content[progress].Texts.length >= 5 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
+          ) : null}
       </motion.div>
       </div>
     </div>
