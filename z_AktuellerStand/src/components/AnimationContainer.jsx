@@ -340,7 +340,7 @@ function AnimationContainer({ topicName }) {
         }}
         style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 2 ? (
-            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[1].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
           ) : null}
       </motion.div>
 
@@ -355,7 +355,7 @@ function AnimationContainer({ topicName }) {
         }}
         style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 3 ? (
-            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[2].string} />
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[2].typeText} text={animationDataContent.Content[progress].Texts[2].string} />
           ) : null}
       </motion.div>
 
@@ -370,7 +370,7 @@ function AnimationContainer({ topicName }) {
         }}
         style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 4 ? (
-            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[3].string} />
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[3].typeText} text={animationDataContent.Content[progress].Texts[3].string} />
           ) : null}
       </motion.div>
 
@@ -385,7 +385,7 @@ function AnimationContainer({ topicName }) {
         }}
         style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 5 ? (
-            <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[4].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
           ) : null}
       </motion.div>
       </div>

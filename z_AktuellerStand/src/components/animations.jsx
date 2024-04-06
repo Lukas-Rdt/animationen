@@ -81,3 +81,9 @@ export const animations = {
         transition: { duration: 0.1, delay: 1 },
     }),
 }
+/*
+Fade out same pos 
+color change
+single one out
+y pos up
+*/

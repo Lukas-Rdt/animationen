@@ -1,9 +1,9 @@
-export function AnimationText({ textType, text }) {
+export function AnimationText({ typeText, text }) {
 
     return (
       <>
-      {textType === "text" ? (
-        <div className="py-2" style={{ paddingLeft: "7.5%", paddingRight: "7.5%", fontSize: "calc(8px + 1vmin)"}}>
+      {typeText === "text" ? (
+        <div className="py-2 font-normal" style={{ paddingLeft: "7.5%", paddingRight: "7.5%", fontSize: "calc(8px + 1vmin)"}}>
           {text}
         </div>
       ) : (
