@@ -88,6 +88,19 @@ export const animations = {
     showExplanation: {
         opacity: 1,
         transition: { duration: 1, ease: 'easeInOut', delay: 1 },
+    },
+
+    resetTranslate50: {
+        transform: "translateY(50%)",
+        transition: { duration: 1.5, ease: 'easeInOut' }
+    },
+    bottom50: {
+        bottom: '50%',
+        transition: { duration: 1.5, ease: 'easeInOut' }
+    },
+    top50: {
+        top: '50%',
+        transition: { duration: 1.5, ease: 'easeInOut' }
     }
 }
 /*

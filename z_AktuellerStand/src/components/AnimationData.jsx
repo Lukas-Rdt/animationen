@@ -10,6 +10,26 @@ export const AnimationData = {
         Texts: [
           {typeText: "titel", string: "Das ist Dana." },
           {typeText: "titel", string: "Das ist Dana." },
+          {typeText: "titel", string: "Das ist Dana." },
+          {typeText: "titel", string: "Das ist Dana." },
+          {typeText: "titel", string: "Das ist Dana." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: "leftTitleIn", speed: "1.5" },
+              { element: "image", animationSelected: "rightGraphicIn", speed: "1.5"  },
+            ],
+            [
+              { element: "text0", animationSelected: "hideExplanation", speed: "1.5"  },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: "showExplanation", speed: "1.5"  },
+              { element: "image", animationSelected: "rightGraphicOut", speed: "1.5"  },
+            ]
+          ],
         ]
       },
       {
@@ -18,6 +38,23 @@ export const AnimationData = {
           {typeText: "titel", string: "Dana arbeitet bei"},
           {typeText: "titel", string: "NoFoodToWaste"},
           {typeText: "text", string: "kauft Lebensmittel kurz vor oder nach Ablauf des Mindesthaltbarkeitsdatums (MHD) und verkauft sie günstig weiter." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: "resetTranslateMinusFast", speed: "0.1" },
+              { element: "text0", animationSelected: "bottom50", speed: "0.1" },
+              { element: "text1", animationSelected: "top50Fast", speed: "0.1" },
+              { element: "text1", animationSelected: "colorCyanFast", speed: "0.1"},
+            ],
+            [
+              { element: "text0", animationSelected: "show", speed: "1.5" },
+              { element: "image", animationSelected: "show", speed: "1.5" },
+            ],
+            [
+              { element: "text1", animationSelected: "show", speed: "1.5" },
+            ]
+          ]
         ]
       },
       {

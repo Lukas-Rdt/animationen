@@ -15,7 +15,7 @@ function AnimationContainer({ topicName }) {
    * 3 = loop with texts
    * 4 = remove all + increase progress
    */
-  const [animationSelection, setAnimationSelection] = useState(1);
+  const [animationSelection, setAnimationSelection] = useState(0);
   // progress of the text appearance
   const [textProgress, setTextProgress] = useState(0);
   // Progress in the module
@@ -54,8 +54,9 @@ function AnimationContainer({ topicName }) {
       }
       backwardAnimations();
     } else if (event.key === "ArrowRight") {
+      nextAnimation();
       explanationController.start(animations.hideExplanation);
-      forwardAnimation();
+      //forwardAnimation();
     }
   };
 
@@ -72,6 +73,45 @@ function AnimationContainer({ topicName }) {
       setTextValuesHistory((prevArray) => [...prevArray, textTopValuesMove]);
     }
   };
+
+  /**
+   * TEMPORARY SOLUTION FOR PRESENTATION
+   */
+  const nextAnimation = async () => {
+    console.log("selection: ", animationSelection);
+    const animationPromises = [];
+    console.log(animationDataContent.Content[progress].AnimationOrder[animationSelection]);
+    for (let i = 0; i < animationDataContent.Content[progress].AnimationOrder[animationSelection].length; i++) {
+      console.log("length: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length);
+
+      for (let j = 0; j < animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length; j++) {
+        const animationEntry = animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j];
+        const { element, animationSelected, speed } = animationEntry;
+        const controller = elementToController[element];
+        
+        console.log("Animation:", animationSelected);
+        /*
+        console.log("Element:", element);
+        console.log("Speed:", speed);
+        console.log("Controller:", controller);
+        */
+        
+        animationPromises.push(controller.start({
+          ...animations[animationSelected],
+          transition: {
+            duration: speed,
+            ease: "easeInOut"
+          }
+        }))
+      }
+      await Promise.all(animationPromises);
+    }
+    setAnimationSelection((prevSelection) => prevSelection + 1);
+  }
+
+  useEffect(() => {
+    console.log("Effect selection: ", animationSelection);
+  }, [animationSelection])
 
   const forwardAnimation = async () => {
     switch (animationSelection) {
@@ -224,6 +264,15 @@ function AnimationContainer({ topicName }) {
     useAnimation(),
     useAnimation(),
   ];
+
+  const elementToController = {
+    "image": graphicController,
+    "text0": titleController,
+    "text1": textControllers[0],
+    "text2": textControllers[1],
+    "text3": textControllers[2],
+    "text4": textControllers[3]
+  }
 
   // Calculate the correct top values for the text elements
   const updateYValues = () => {
@@ -379,7 +428,7 @@ function AnimationContainer({ topicName }) {
         className="title"
         animate={titleController}
         initial={{ position: "absolute", right: "100%" }}
-        style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
+        style={{ width: "50%", bottom: "50%", transform: "translateY(-50%)" }}>
         <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[0].string} />
       </motion.div>
 
