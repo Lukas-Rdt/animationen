@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { animations } from "./animations";
 import { GraphicContainer } from "./GraphicContainer";
-import { AnimationTitle } from "./AnimationTitle";
 import { AnimationText } from "./AnimationText";
 import { AnimationData } from "./AnimationData";
 
@@ -46,12 +45,16 @@ function AnimationContainer({ topicName }) {
   // handles the correct animation
   const handleKeyPress = (event) => {
     if (event.key === "ArrowLeft") {
+      if (progress === 0 && animationSelection === 2) {
+        explanationController.start(animations.showExplanation);
+      }
       if (animationSelection === 1 && progress !== 0) {
         setLastProgress(progress);
         setProgress((prevProgress) => prevProgress - 1);
       }
       backwardAnimations();
     } else if (event.key === "ArrowRight") {
+      explanationController.start(animations.hideExplanation);
       forwardAnimation();
     }
   };
@@ -198,10 +201,10 @@ function AnimationContainer({ topicName }) {
         break;
       case 4:
         // auf text progress textlist length zurück
-        textControllers[animationDataContent.Content[progress].Texts.length - 1].start(
+        textControllers[animationDataContent.Content[progress].Texts.length - 2].start(
           animations.resetTextOp
         );
-        setTextProgress(animationDataContent.Content[progress].Texts.length - 1);
+        setTextProgress(animationDataContent.Content[progress].Texts.length - 2);
         setAnimationSelection(3);
         break;
       default:
@@ -210,6 +213,7 @@ function AnimationContainer({ topicName }) {
   };
 
   // assignment to animation controller
+  const explanationController = useAnimation();
   const graphicController = useAnimation();
   const titleController = useAnimation();
 
@@ -278,8 +282,56 @@ function AnimationContainer({ topicName }) {
         justifyContent: "center",
         marginBottom: "100px"
       }}>
-        <div style={{ position: "relative", width: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", 
-        overflow: "hidden",}}>
+
+
+      <div style={{ position: "relative", width: "60%", maxWidth: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", 
+        overflow: "hidden", cursor: "pointer" }}>
+
+      <motion.div
+      className="w-full, h-full flex justify-center"
+      initial={{ visibility: "visible" }}
+      animate={explanationController}
+      >
+        <div
+         style={{
+          width: "50%",
+          height: "100%",
+          position: "absolute",
+          left: 0,
+          top: 0,
+          textAlign: "center",
+          fontSize: "calc(14px + 1vmin)",
+          paddingTop: "30%",
+         }}>
+          Zurück
+        </div>
+        <div
+        style={{
+          width: "50%",
+          height: "100%",
+          position: "absolute",
+          right: 0,
+          top: 0,
+          textAlign: "center",
+          fontSize: "calc(14px + 1vmin)",
+          paddingTop: "30%"
+          }}>
+          Weiter
+        </div>
+
+        <div
+        style={{
+          width: "80%",
+          height: "50%",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          Zum steuern der Animationen links oder rechts auf den Bereich klicken oder mit den Pfeiltasten links/rechts.
+        </div>
+      </motion.div>
+
 
       {/* Steurung über den Bidlschirm */}
       <div
@@ -291,6 +343,7 @@ function AnimationContainer({ topicName }) {
           top: 0,
           zIndex: 1,
         }}
+        className="bg-black opacity-0 hover:opacity-5 duration-200"
         onClick={() => {
           handleKeyPress({ key: "ArrowLeft" });
         }}></div>
@@ -304,6 +357,7 @@ function AnimationContainer({ topicName }) {
           top: 0,
           zIndex: 1,
         }}
+        className="bg-black opacity-0 hover:opacity-5 duration-200"
         onClick={() => {
           handleKeyPress({ key: "ArrowRight" });
         }}></div>

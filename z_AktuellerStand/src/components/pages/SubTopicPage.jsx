@@ -3,6 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import AppContext from '../AppContext';
 import { ReactComponent as RightArrow } from '../../assets/images/right-arrow.svg';
 import AnimationContainer from '../AnimationContainer';
+import { TopicData } from '../TopicData';
 
 const SubTopicPage = () => {
     const { subtopicId } = useParams(); // get name of current subtopic
@@ -19,6 +20,14 @@ const SubTopicPage = () => {
 
     const [initialScrollDone, setInitialScrollDone] = useState(false);
     const [showToTopBtn, setShowToTopBtn] = useState(false);
+
+    const isVideoAnimation = TopicData[subtopicId];
+    const colors = [
+        '#77a9d1',
+        '#8377d1',
+        '#c177d1',
+        '#d177b3'
+    ]
 
     // scroll to specific content if it was clicked, or top of page
     useEffect(() => {
@@ -64,15 +73,22 @@ const SubTopicPage = () => {
         <div className='SubTopicPage' style={subTopic_style}>
             <div id="top" className='h1 mt-10 mb-20'>{subtopicId}</div>
             <div id="section1" style={{ ...section_style, background: '#77a9d1', minHeight: '75vh', }}>
-                <p className='h2 mb-10 mt-14'>{contentNames[0]}</p>
-                {/* 
-                <iframe
+                {isVideoAnimation.Video &&
+                    <>
+                    <p className='h2 mb-10 mt-14'>{contentNames[0]}</p>
+                    <iframe
                     src={videoContent.link}
                     title={videoContent.title} allowFullScreen
-                    style={{ border: '0', height: '50vh', width: '60%', maxWidth: '900px', marginBottom: '100px' }}>
-                </iframe>
-                */}
-                <AnimationContainer topicName={subtopicId} /> 
+                    style={{ border: '0', minHeight: '60vh', width: '60%', maxWidth: '1000px', marginBottom: '100px', borderRadius: '20px' }}>
+                    </iframe>
+                    </>
+                }
+                {isVideoAnimation.Animation &&
+                    <>
+                    <p className='h2 mb-10 mt-14'>Animation</p>
+                    <AnimationContainer topicName={subtopicId} /> 
+                    </>
+                }
             </div>
             <div id="section2" style={{...section_style, background: '#8377d1'}}>
                 <p className='h2 mb-10 mt-14'>{contentNames[1]}</p>

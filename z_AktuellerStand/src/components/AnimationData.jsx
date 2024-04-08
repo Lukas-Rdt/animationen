@@ -9,6 +9,7 @@ export const AnimationData = {
         Image: { typeImg: "image", src: exampleImg, alt: "Bild 1" },
         Texts: [
           {typeText: "titel", string: "Das ist Dana." },
+          {typeText: "titel", string: "Das ist Dana." },
         ]
       },
       {
@@ -63,25 +64,92 @@ export const AnimationData = {
       {
         Image: { typeImg: "image", src: exampleImg, alt: "Bild 1" },
         Texts: [
-          {typeText: "titel", string: "Überschrift" },
-          {typeText: "text", string: "Text 1" },
-          {typeText: "text", string: "Text 2 ist länger Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi earum commodi maxime? Ducimus suscipit dolore ab eligendi. Dolorem repellendus accusantium obcaecati optio ipsam blanditiis, quia, eum numquam quas rem sapiente." },
+          {typeText: "titel", string: "Text 1" },
+          {typeText: "text", string: "Text 2" },
           {typeText: "text", string: "Text 3" },
+          {typeText: "text", string: "Text 4" },
         ]
       },
       {
         Image: { typeImg: "image", src: bild1, alt: "Bild 2" },
         Texts: [
-          {typeText: "titel", string: "Einzelnd" },
-          {typeText: "titel", string: "duo" },
-          {typeText: "titel", string: "tripel" },
+          {typeText: "text", string: "Text 1" },
+          {typeText: "text", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
         ]
       },
       {
         Image: { typeImg: "image", src: exampleImg, alt: "Bild 3" },
         Texts: [
-          {typeText: "text", string: "UX für KI text" },
-          {typeText: "text", string: "Text im 3." },
+          {typeText: "titel", string: "Text 1" },
+          {typeText: "titel", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+          {typeText: "titel", string: "Text 4" },
+          {typeText: "titel", string: "Text 5" },
+        ]
+      },
+    ],
+  },
+  Designimplikationen: {
+    Type: "Base",
+    Content: [
+      {
+        Image: { typeImg: "image", src: exampleImg, alt: "Bild 1" },
+        Texts: [
+          {typeText: "titel", string: "Text 1" },
+          {typeText: "text", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+          {typeText: "text", string: "Text 4" },
+        ]
+      },
+      {
+        Image: { typeImg: "image", src: bild1, alt: "Bild 2" },
+        Texts: [
+          {typeText: "text", string: "Text 1" },
+          {typeText: "text", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+        ]
+      },
+      {
+        Image: { typeImg: "image", src: exampleImg, alt: "Bild 3" },
+        Texts: [
+          {typeText: "titel", string: "Text 1" },
+          {typeText: "titel", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+          {typeText: "titel", string: "Text 4" },
+          {typeText: "titel", string: "Text 5" },
+        ]
+      },
+    ],
+  },
+  Fazit: {
+    Type: "Base",
+    Content: [
+      {
+        Image: { typeImg: "image", src: exampleImg, alt: "Bild 1" },
+        Texts: [
+          {typeText: "titel", string: "Text 1" },
+          {typeText: "text", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+          {typeText: "text", string: "Text 4" },
+        ]
+      },
+      {
+        Image: { typeImg: "image", src: bild1, alt: "Bild 2" },
+        Texts: [
+          {typeText: "text", string: "Text 1" },
+          {typeText: "text", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+        ]
+      },
+      {
+        Image: { typeImg: "image", src: exampleImg, alt: "Bild 3" },
+        Texts: [
+          {typeText: "titel", string: "Text 1" },
+          {typeText: "titel", string: "Text 2" },
+          {typeText: "text", string: "Text 3" },
+          {typeText: "titel", string: "Text 4" },
+          {typeText: "titel", string: "Text 5" },
         ]
       },
     ],
