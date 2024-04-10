@@ -83,16 +83,16 @@ const SubTopicPage = () => {
                     </iframe>
                     </>
                 }
+            </div>
+            <div id="section2" style={{...section_style, background: '#8377d1'}}>
+                <p className='h2 mb-10 mt-14'>{contentNames[1]}</p>
+                <p className='text'>{sectionTwoText}</p>
                 {isVideoAnimation.Animation &&
                     <>
                     <p className='h2 mb-10 mt-14'>Animation</p>
                     <AnimationContainer topicName={subtopicId} /> 
                     </>
                 }
-            </div>
-            <div id="section2" style={{...section_style, background: '#8377d1'}}>
-                <p className='h2 mb-10 mt-14'>{contentNames[1]}</p>
-                <p className='text'>{sectionTwoText}</p>
             </div>
             {hasSectionThree &&
                 <div id="section3" style={{ ...section_style, background: '#c177d1' }}>

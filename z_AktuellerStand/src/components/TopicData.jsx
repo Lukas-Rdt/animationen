@@ -4,7 +4,7 @@ export const TopicData = {
         Animation: true,
     },
     Risikostufen: {
-        Video: false,
+        Video: true,
         Animation: true,
     },
     Designimplikationen: {
@@ -12,7 +12,7 @@ export const TopicData = {
         Animation: true,
     },
     Fazit: {
-        Video: false,
+        Video: true,
         Animation: true,
     }
 }

@@ -56,7 +56,7 @@ function AnimationContainer({ topicName }) {
       //backwardAnimations();
       lastAnimation();
     } else if (event.key === "ArrowRight") {
-      nextAnimation("next");
+      nextAnimation();
       explanationController.start(animations.hide);
       //forwardAnimation();
     }
@@ -132,30 +132,32 @@ function AnimationContainer({ topicName }) {
           for (let k = 0; k < lastAnimationOrder[lastAnimationOrder.length - 1][i][j].animationSelected.length; k++) {
             const animationSelected = animationEntry.animationSelected[k];
             // only if animationSelection === max length
-            if (animationSelected === "hide") {
-              animationPromises.push(controller.start({
-                ...animations.show,
-                transition: {
-                  duration: speed,
-                  ease: "easeInOut"
-                }
-              }))
-            } else if (animationSelected === "show") {
-              animationPromises.push(controller.start({
-                ...animations.hide,
-                transition: {
-                  duration: speed,
-                  ease: "easeInOut"
-                }
-              }))
-            } else {
-              animationPromises.push(controller.start({
-                ...animations[animationSelected],
-                transition: {
-                  duration: speed,
-                  ease: "easeInOut"
-                }
-              }))
+            if (animationSelection === lastAnimationOrder.length -1) {
+              if (animationSelected === "hide") {
+                animationPromises.push(controller.start({
+                  ...animations.show,
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+              } else if (animationSelected === "show") {
+                animationPromises.push(controller.start({
+                  ...animations.hide,
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+              } else {
+                animationPromises.push(controller.start({
+                  ...animations[animationSelected],
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+              }
             }
           }
         }
@@ -228,7 +230,7 @@ function AnimationContainer({ topicName }) {
   /**
    * TEMPORARY SOLUTION FOR PRESENTATION - MIGHT BECOME PERMAMENT
    */
-  const nextAnimation = async (direction) => {
+  const nextAnimation = async () => {
     console.log("Anfang nextAnimation:");
     console.log("selection: ", animationSelection);
     const animationPromises = [];
@@ -240,13 +242,13 @@ function AnimationContainer({ topicName }) {
 
     console.log(animationDataContent.Content[progress].AnimationOrder[animationSelection]);
     for (let i = 0; i < animationDataContent.Content[progress].AnimationOrder[animationSelection].length; i++) {
-      console.log("Anzahl Animationen in diesem Block: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length);
+      //console.log("Anzahl Animationen in diesem Block: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length);
 
       for (let j = 0; j < animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length; j++) {
 
-        console.log("in der zweiten schleife drinne");
-        console.log("was voher hier war: ", animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j])
-        console.log("test for tiefer: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[0])
+        // console.log("in der zweiten schleife drinne");
+        // console.log("was voher hier war: ", animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j])
+        // console.log("test for tiefer: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[0])
 
         const animationEntry = animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j];
         const { element, speed } = animationEntry;
@@ -254,11 +256,11 @@ function AnimationContainer({ topicName }) {
 
         for (let k = 0; k < animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected.length; k++) {
 
-          console.log("was in der for raus kommt: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[k]);
+          // console.log("was in der for raus kommt: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[k]);
 
           const animationSelected = animationEntry.animationSelected[k];
 
-          console.log("Animation:", animationSelected);
+          // console.log("Animation:", animationSelected);
           // console.log("Element:", element);
           // console.log("Speed:", speed);
           // console.log("Controller:", controller);
@@ -271,10 +273,10 @@ function AnimationContainer({ topicName }) {
             const stringParts = animationSelected.split(":");
             const animationMethod = stringParts[0];
             const animationValue = stringParts[1];
-            console.log("");
-            console.log("method: " + animationMethod);
-            console.log("value: " + animationValue);
-            console.log("");
+            // console.log("");
+            // console.log("method: " + animationMethod);
+            // console.log("value: " + animationValue);
+            // console.log("");
 
 
             // special cases where a parameter needs to be passed
@@ -319,7 +321,10 @@ function AnimationContainer({ topicName }) {
       }
       await Promise.all(animationPromises);
     }
-    setAnimationSelection((prevSelection) => prevSelection + 1);
+    const newSelect = animationSelection + 1;
+    setAnimationSelection(newSelect);
+    console.log("AnimationSelection after increase: " + animationSelection);
+    console.log("Inhalt in AnimationOrder: ", animationDataContent.Content[progress].AnimationOrder[animationSelection]);
     console.log("Länge in AnimationOrder: ", animationDataContent.Content[progress].AnimationOrder.length)
     if (animationSelection === animationDataContent.Content[progress].AnimationOrder.length - 1) {
       console.log("Reset Selection, increase Porgress");
