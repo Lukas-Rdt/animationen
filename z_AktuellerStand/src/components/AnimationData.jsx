@@ -9,25 +9,22 @@ export const AnimationData = {
         Image: { typeImg: "image", src: exampleImg, alt: "Bild 1" },
         Texts: [
           {typeText: "titel", string: "Das ist Dana." },
-          {typeText: "titel", string: "Das ist Dana." },
-          {typeText: "titel", string: "Das ist Dana." },
-          {typeText: "titel", string: "Das ist Dana." },
-          {typeText: "titel", string: "Das ist Dana." },
         ],
         AnimationOrder: [
           [
             [
-              { element: "text0", animationSelected: "leftTitleIn", speed: "1.5" },
-              { element: "image", animationSelected: "rightGraphicIn", speed: "1.5"  },
+              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "1.5" },
+              { element: "image", animationSelected: ["left100", "top50"], speed: "1.5"},
             ],
             [
-              { element: "text0", animationSelected: "hideExplanation", speed: "1.5"  },
-            ]
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50"], speed: "1.5"  },
+            ],
           ],
           [
             [
-              { element: "text0", animationSelected: "showExplanation", speed: "1.5"  },
-              { element: "image", animationSelected: "rightGraphicOut", speed: "1.5"  },
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
             ]
           ],
         ]
@@ -42,17 +39,40 @@ export const AnimationData = {
         AnimationOrder: [
           [
             [
-              { element: "text0", animationSelected: "resetTranslateMinusFast", speed: "0.1" },
-              { element: "text0", animationSelected: "bottom50", speed: "0.1" },
-              { element: "text1", animationSelected: "top50Fast", speed: "0.1" },
-              { element: "text1", animationSelected: "colorCyanFast", speed: "0.1"},
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
             ],
             [
-              { element: "text0", animationSelected: "show", speed: "1.5" },
-              { element: "image", animationSelected: "show", speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
             ],
             [
-              { element: "text1", animationSelected: "show", speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate0", "show"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "top50", "color:#77a9d1", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text1", animationSelected: ["right50", "remove:bottom", "top50", "color:#77a9d1", "show"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "top50", "hide"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text1", animationSelected: ["right50", "remove:top", "bottom50", "color:#000000"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text2", animationSelected: ["right50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "top50", "hide"], speed: "1.5"},
             ]
           ]
         ]
@@ -61,36 +81,144 @@ export const AnimationData = {
         Image: { typeImg: "image", src: bild1, alt: "Bild 4" },
         Texts: [
           {typeText: "text", string: "Bei NoFoodToWaste verwendet Dana verschiedene Software-Tools, um ihre Arbeit zu erleichtern." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ]
+          ]
         ]
       },
       {
         Image: { typeImg: "image", src: bild1, alt: "Bild 4" },
         Texts: [
           {typeText: "text", string: "Ein Beispiel dafür ist die Rechtschreibprüfung ihres Textverarbeitungsprogramms." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ]
+          ]
         ]
       },
       {
         Image: { typeImg: "image", src: bild1, alt: "Bild 4" },
         Texts: [
           {typeText: "text", string: "Die Kunden des Unternehmens können im Gespräch mit einem Chatbot erfahren, was das MHD aussagt und wie sie Lebensmittel sparen." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ]
+          ]
         ]
       },
       {
         Image: { typeImg: "image", src: bild1, alt: "Bild 4" },
         Texts: [
           {typeText: "text", string: "Ein selbstlernender Algorithmus gibt an, wann in welchen Läden mit welcher Wahrscheinlichkeit wie viele Lebensmittel kurz vor dem MHD sind." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ]
+          ]
         ]
       },
       {
         Image: { typeImg: "image", src: bild1, alt: "Bild 4" },
         Texts: [
           {typeText: "text", string: "Außerdem kann Dana mit ihrem E-Mail-Programm automatisch Antworten generieren und versenden." },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ]
+          ]
         ]
       },
       {
         Image: { typeImg: "image", src: bild1, alt: "Bild 4" },
         Texts: [
           {typeText: "text", string: "Nun fragt sie sich, ab wann man bei solchen Assistenzsystemen von \"Künstlicher Intelligenz spricht\"" },
+        ],
+        AnimationOrder: [
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+            ]
+          ]
         ]
       },
     ],

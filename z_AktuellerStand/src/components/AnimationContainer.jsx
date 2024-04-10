@@ -48,14 +48,16 @@ function AnimationContainer({ topicName }) {
       if (progress === 0 && animationSelection === 2) {
         explanationController.start(animations.showExplanation);
       }
-      if (animationSelection === 1 && progress !== 0) {
+      if (animationSelection === 0 && progress !== 0) {
         setLastProgress(progress);
         setProgress((prevProgress) => prevProgress - 1);
       }
-      backwardAnimations();
+      //nextAnimation("back");
+      //backwardAnimations();
+      testFormat();
     } else if (event.key === "ArrowRight") {
-      nextAnimation();
-      explanationController.start(animations.hideExplanation);
+      nextAnimation("next");
+      explanationController.start(animations.hide);
       //forwardAnimation();
     }
   };
@@ -74,183 +76,203 @@ function AnimationContainer({ topicName }) {
     }
   };
 
+
+  const testFormat = async () => {
+    let lastAnimationOrder;
+    const animationPromises = [];
+    if (progress > 0) {
+      lastAnimationOrder = animationDataContent.Content[progress - 1].AnimationOrder;
+      console.log("direkt nach einlesen:")
+      console.log(lastAnimationOrder);
+      let firstEntry = lastAnimationOrder[0].shift();
+      lastAnimationOrder.unshift([firstEntry]);
+
+      console.log(lastAnimationOrder);
+      /*
+      if (lastAnimationOrder.length === 2) {
+        lastAnimationOrder.splice(1, 1);
+      } else {
+        lastAnimationOrder.splice(1, 1);
+        lastAnimationOrder.splice(lastAnimationOrder.length - 2, 1);
+      }
+      */
+      console.log("Nach splicing:");
+      console.log(lastAnimationOrder);
+
+      const lastIndex = lastAnimationOrder.length - 1;
+      if (lastIndex > 0) {
+        const lastEntrySubarrays = lastAnimationOrder[lastIndex];
+        lastAnimationOrder[lastIndex - 1].push(...lastEntrySubarrays);
+        lastAnimationOrder.pop()
+      }
+      lastAnimationOrder.forEach(subarray => subarray.reverse());
+      console.log("nach reverse");
+      console.log(lastAnimationOrder);
+
+    }
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log(lastAnimationOrder);
+    console.log("lastAnimationOrder[lastAnimationOrder.length - 1].length : " + lastAnimationOrder[lastAnimationOrder.length - 1].length);
+    if ((progress === 0 && animationSelection === 0) || (progress === animationDataContent.Content.length && animationSelection === animationDataContent.Content[progress].AnimationOrder.length)) {
+      return;
+    } else if (progress > 0 && animationSelection === 0) {
+      for (let i = 0; i < lastAnimationOrder[lastAnimationOrder.length - 1].length; i++) {
+        console.log(i + ", " + lastAnimationOrder.length);
+        for (let j = 0; j < lastAnimationOrder[lastAnimationOrder.length - 1][i].length; j++) {
+
+          const animationEntry = lastAnimationOrder[lastAnimationOrder.length - 1][i][j];
+          const { element, speed } = animationEntry;
+          const controller = elementToController[element];
+
+          for (let k = 0; k < lastAnimationOrder[lastAnimationOrder.length - 1][i][j].animationSelected.length; k++) {
+            const animationSelected = animationEntry.animationSelected[k];
+            // only if animationSelection === max length
+            if (animationSelected === "hide") {
+              animationPromises.push(controller.start({
+                ...animations.show,
+                transition: {
+                  duration: speed,
+                  ease: "easeInOut"
+                }
+              }))
+            } else if (animationSelected === "show") {
+              animationPromises.push(controller.start({
+                ...animations.hide,
+                transition: {
+                  duration: speed,
+                  ease: "easeInOut"
+                }
+              }))
+            } else {
+              animationPromises.push(controller.start({
+                ...animations[animationSelected],
+                transition: {
+                  duration: speed,
+                  ease: "easeInOut"
+                }
+              }))
+            }
+          }
+        }
+        await Promise.all(animationPromises);
+      }
+      const nowSelect = lastAnimationOrder.length - 1;
+      setAnimationSelection(nowSelect);
+      const nowProgress = progress - 1;
+      setProgress(nowProgress);
+    } else {
+      console.log("default case");
+    }
+    console.log("");
+    console.log("");
+    console.log("");
+  }
+
   /**
-   * TEMPORARY SOLUTION FOR PRESENTATION
+   * TEMPORARY SOLUTION FOR PRESENTATION - MIGHT BECOME PERMAMENT
    */
-  const nextAnimation = async () => {
+  const nextAnimation = async (direction) => {
+    console.log("Anfang nextAnimation:");
     console.log("selection: ", animationSelection);
     const animationPromises = [];
+
+    // progress 0, selection 0,
+    // progress max, selection max (vlt letzten hide entfernen ~ absprechen wie man es macht)
+    // progress > 0, selection 0
+    // progress x, selection x, aber nichts von dem darüber ~ default
+
     console.log(animationDataContent.Content[progress].AnimationOrder[animationSelection]);
     for (let i = 0; i < animationDataContent.Content[progress].AnimationOrder[animationSelection].length; i++) {
-      console.log("length: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length);
+      console.log("Anzahl Animationen in diesem Block: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length);
 
       for (let j = 0; j < animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length; j++) {
+
+        console.log("in der zweiten schleife drinne");
+        console.log("was voher hier war: ", animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j])
+        console.log("test for tiefer: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[0])
+        
         const animationEntry = animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j];
-        const { element, animationSelected, speed } = animationEntry;
+        const { element, speed } = animationEntry;
         const controller = elementToController[element];
+
+        for (let k = 0; k < animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected.length; k++) {
+          
+          console.log("was in der for raus kommt: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[k]);
+
+          const animationSelected = animationEntry.animationSelected[k];
         
-        console.log("Animation:", animationSelected);
-        /*
-        console.log("Element:", element);
-        console.log("Speed:", speed);
-        console.log("Controller:", controller);
-        */
+          console.log("Animation:", animationSelected);
+          // console.log("Element:", element);
+          // console.log("Speed:", speed);
+          // console.log("Controller:", controller);
         
-        animationPromises.push(controller.start({
-          ...animations[animationSelected],
-          transition: {
-            duration: speed,
-            ease: "easeInOut"
+          // if animationSelection = 0 : erstes element speed = 0
+          // if animationSelection = 0 and progress > 0 : nach dem umdrehen eigentlich letztes durchführen und dann den "ersten" klick, alles in einem
+
+
+          if (animationSelected.includes(":")) {
+            const stringParts = animationSelected.split(":");
+            const animationMethod = stringParts[0];
+            const animationValue = stringParts[1];
+            console.log("");
+            console.log("method: " + animationMethod);
+            console.log("value: " + animationValue);
+            console.log("");
+            
+
+            // special cases where a parameter needs to be passed
+            switch (animationMethod) {
+              // special case if a anchor (top, right, bottom, left) needs to be removed for another to be in effect
+              case "remove":
+                animationPromises.push(controller.start({
+                  ...animations.unset(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+                break;
+              case "color":
+                animationPromises.push(controller.start({
+                  ...animations.color(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+                break;
+              default:
+                break;
+            }
           }
-        }))
+
+          animationPromises.push(controller.start({
+            ...animations[animationSelected],
+            transition: {
+              duration: speed,
+              ease: "easeInOut"
+            }
+          }))
+        } 
       }
       await Promise.all(animationPromises);
     }
     setAnimationSelection((prevSelection) => prevSelection + 1);
+    console.log("Länge in AnimationOrder: ", animationDataContent.Content[progress].AnimationOrder.length)
+    if (animationSelection === animationDataContent.Content[progress].AnimationOrder.length - 1) {
+      console.log("Reset Selection, increase Porgress");
+      setProgress((prevProgress) => prevProgress + 1);
+      setAnimationSelection(0);
+    }
   }
 
   useEffect(() => {
+    console.log("useEffect:");
     console.log("Effect selection: ", animationSelection);
-  }, [animationSelection])
-
-  const forwardAnimation = async () => {
-    switch (animationSelection) {
-      case 1:
-        updateYValues();
-        await Promise.all([
-          graphicController.start(animations.rightGraphicIn),
-          titleController.start(animations.leftTitleIn),
-          textControllers.map(controller => controller.start(animations.leftTitleIn))
-        ]);
-        // check if only title element is present -> Selection(4)
-        if (animationDataContent.Content[progress].Texts.length === 1) {
-          setAnimationSelection(4);
-        } else {
-          setAnimationSelection(2);
-        }
-        break;
-      case 2:
-        console.log("case 2 textprogress: " + textProgress);
-        addExistingTopValues();
-        await titleController.start(animations.leftTitleUp);
-        textControllers.forEach((controller, i) => {
-          controller.start(animations.hiddenTextReset(textTopValuesMove[i]));
-          console.log(textTopValuesMove[i]);
-        });
-        setAnimationSelection(3);
-        break;
-      case 3:
-        console.log("textprogress: " + textProgress);
-        if (textProgress >= 0 && textProgress < animationDataContent.Content[progress].Texts.length - 1) {
-          console.log(textTopValuesMove[textProgress]);
-          textControllers[textProgress].start(animations.textOp);
-          console.log(textTopValuesMove[textProgress]);
-          if (textProgress === animationDataContent.Content[progress].Texts.length - 2) {
-            setAnimationSelection(4);
-            // Reset for text progress
-            setTextProgress(0);
-          } else {
-            setTextProgress(textProgress + 1);
-          }
-        } else {
-          setAnimationSelection(4);
-          // Reset for text progress
-          setTextProgress(0);
-        }
-        break;
-      case 4:
-        setTextProgress(0);
-        await Promise.all([
-          graphicController.start(animations.rightGraphicOut),
-          titleController.start(animations.leftTitleOut),
-          textControllers.map(controller => controller.start(animations.leftTextOut))
-        ]);
-        await Promise.all([
-          titleController.start(animations.hiddenTitleReset),
-          textControllers.map(controller => controller.start(animations.setTextsHidden))
-        ]);
-        textControllers.forEach((controller, i) => {
-          controller.start(animations.setTextsHidden);
-        });
-        setAnimationSelection(1);
-        setLastProgress(progress);
-        // move to useState when starting component
-        if (progress < animationDataContent.Content.length - 1) {
-          setProgress((prevProgress) => prevProgress + 1);
-        }
-        break;
-      default:
-        console.log("Error: Unknown animation selection");
-        setProgress(1);
-        break;
-    }
-  };
-
-  const backwardAnimations = async () => {
-    switch (animationSelection) {
-      case 1:
-        if (progress === 0 && lastProgress === 0) {
-          return;
-        }
-        //setProgress(prevProgress => prevProgress - 1);
-        updateYValues();
-
-        // texte von außen reinfliegen lassen
-        setTextProgress(animationDataContent.Content[progress].Texts.length - 1);
-        titleController.start(animations.hiddenTitleSetUp);
-        /*
-        textControllers.forEach((controller, i) => {
-          controller.start(animations.hiddenTextReset(textTopValuesMove[i]));
-          console.log(textTopValuesMove[i]);
-        })
-        */
-        setNewTextTops();
-        await Promise.all([
-          graphicController.start(animations.rightGraphicIn),
-          titleController.start(animations.leftTitleIn),
-          textControllers.forEach((controller) => {
-            controller.start(animations.leftTextIn);
-          }),
-          ...animationDataContent.Content[progress - 1].Texts.map((_, i) => {
-            textControllers[i].start(animations.hiddenTextOp);
-          }),
-        ]);
-        console.log("Progress: " + progress);
-        setLastProgress(0);
-        setAnimationSelection(4);
-        break;
-      case 2:
-        await Promise.all([
-          graphicController.start(animations.rightGraphicOut),
-          titleController.start(animations.leftTitleOut),
-          // text outside so they can fly in afterwards
-          textControllers.map(controller => controller.start(animations.leftTextOut))
-        ]);
-        //setProgress(prevProgress => prevProgress - 1);
-        setAnimationSelection(1);
-        break;
-      case 3:
-        if (textProgress === 0) {
-          await titleController.start(animations.resetTitleMid);
-          console.log("reset title mid");
-          setAnimationSelection(2);
-        } else {
-          textControllers[textProgress - 1].start(animations.resetTextOp);
-          setTextProgress(textProgress - 1);
-        }
-        break;
-      case 4:
-        // auf text progress textlist length zurück
-        textControllers[animationDataContent.Content[progress].Texts.length - 2].start(
-          animations.resetTextOp
-        );
-        setTextProgress(animationDataContent.Content[progress].Texts.length - 2);
-        setAnimationSelection(3);
-        break;
-      default:
-        break;
-    }
-  };
+    console.log("Progress: ", progress);
+  }, [animationSelection, progress])
 
   // assignment to animation controller
   const explanationController = useAnimation();
@@ -331,10 +353,7 @@ function AnimationContainer({ topicName }) {
         justifyContent: "center",
         marginBottom: "100px"
       }}>
-
-
-      <div style={{ position: "relative", width: "60%", maxWidth: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", 
-        overflow: "hidden", cursor: "pointer" }}>
+      <div style={{ position: "relative", width: "60%", maxWidth: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", cursor: "pointer", overflow: "hidden" }}>
 
       <motion.div
       className="w-full, h-full flex justify-center"
@@ -428,7 +447,7 @@ function AnimationContainer({ topicName }) {
         className="title"
         animate={titleController}
         initial={{ position: "absolute", right: "100%" }}
-        style={{ width: "50%", bottom: "50%", transform: "translateY(-50%)" }}>
+        style={{ width: "50%" }}>
         <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[0].string} />
       </motion.div>
 
@@ -493,6 +512,7 @@ function AnimationContainer({ topicName }) {
       </motion.div>
       </div>
     </div>
+    // anstatt null, default Text setzen, sie sind aber hiddens
   );
 }
 /*
