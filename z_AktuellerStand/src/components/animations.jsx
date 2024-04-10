@@ -32,6 +32,12 @@ export const animations = {
         top: '100%',
     },
 
+    move: (direction, value) => {
+        let directionStyle = {};
+        directionStyle[direction] = value;
+        return directionStyle;
+    },
+
     unset: (direction) => {
         let unsetStyle = {};
         unsetStyle[direction] = 'unset';

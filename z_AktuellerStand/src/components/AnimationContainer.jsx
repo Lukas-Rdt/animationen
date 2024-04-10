@@ -54,7 +54,7 @@ function AnimationContainer({ topicName }) {
       }
       //nextAnimation("back");
       //backwardAnimations();
-      testFormat();
+      lastAnimation();
     } else if (event.key === "ArrowRight") {
       nextAnimation("next");
       explanationController.start(animations.hide);
@@ -77,10 +77,22 @@ function AnimationContainer({ topicName }) {
   };
 
 
-  const testFormat = async () => {
+  /*
+  Bugs:
+   - Screen 2 farbiger Schriftzug geht nciht zurück.
+   - Später kommt Text und verschwindet wieder : überall passende classes wählen, splicing korrigieren
+   */
+  const lastAnimation = async () => {
     let lastAnimationOrder;
     const animationPromises = [];
-    if (progress > 0) {
+    console.log("");
+    console.log("");
+    console.log("");
+    // console.log(lastAnimationOrder);
+    // console.log("lastAnimationOrder[lastAnimationOrder.length - 1].length : " + lastAnimationOrder[lastAnimationOrder.length - 1].length);
+    if ((progress === 0 && animationSelection === 0) || (progress === animationDataContent.Content.length && animationSelection === animationDataContent.Content[progress].AnimationOrder.length)) {
+      return;
+    } else if (progress > 0 && animationSelection === 0) {
       lastAnimationOrder = animationDataContent.Content[progress - 1].AnimationOrder;
       console.log("direkt nach einlesen:")
       console.log(lastAnimationOrder);
@@ -109,15 +121,6 @@ function AnimationContainer({ topicName }) {
       console.log("nach reverse");
       console.log(lastAnimationOrder);
 
-    }
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log(lastAnimationOrder);
-    console.log("lastAnimationOrder[lastAnimationOrder.length - 1].length : " + lastAnimationOrder[lastAnimationOrder.length - 1].length);
-    if ((progress === 0 && animationSelection === 0) || (progress === animationDataContent.Content.length && animationSelection === animationDataContent.Content[progress].AnimationOrder.length)) {
-      return;
-    } else if (progress > 0 && animationSelection === 0) {
       for (let i = 0; i < lastAnimationOrder[lastAnimationOrder.length - 1].length; i++) {
         console.log(i + ", " + lastAnimationOrder.length);
         for (let j = 0; j < lastAnimationOrder[lastAnimationOrder.length - 1][i].length; j++) {
@@ -163,7 +166,59 @@ function AnimationContainer({ topicName }) {
       const nowProgress = progress - 1;
       setProgress(nowProgress);
     } else {
-      console.log("default case");
+
+      lastAnimationOrder = animationDataContent.Content[progress].AnimationOrder;
+      console.log("direkt nach einlesen:")
+      console.log(lastAnimationOrder);
+      let firstEntry = lastAnimationOrder[0].shift();
+      lastAnimationOrder.unshift([firstEntry]);
+
+      console.log(lastAnimationOrder);
+
+      // check if working as intendet
+      if (lastAnimationOrder.length === 2) {
+        lastAnimationOrder.splice(1, 1);
+      } else {
+        lastAnimationOrder.splice(1, 1);
+        lastAnimationOrder.splice(lastAnimationOrder.length - 2, 1);
+      }
+      console.log("Nach splicing:");
+      console.log(lastAnimationOrder);
+
+      const lastIndex = lastAnimationOrder.length - 1;
+      if (lastIndex > 0) {
+        const lastEntrySubarrays = lastAnimationOrder[lastIndex];
+        lastAnimationOrder[lastIndex - 1].push(...lastEntrySubarrays);
+        lastAnimationOrder.pop()
+      }
+      lastAnimationOrder.forEach(subarray => subarray.reverse());
+      console.log("nach reverse");
+      console.log(lastAnimationOrder);
+
+      for (let i = 0; i < lastAnimationOrder[animationSelection - 1].length; i++) {
+        console.log(i + ", " + lastAnimationOrder.length);
+        for (let j = 0; j < lastAnimationOrder[animationSelection - 1][i].length; j++) {
+
+          const animationEntry = lastAnimationOrder[animationSelection - 1][i][j];
+          const { element, speed } = animationEntry;
+          const controller = elementToController[element];
+
+          for (let k = 0; k < lastAnimationOrder[animationSelection - 1][i][j].animationSelected.length; k++) {
+            const animationSelected = animationEntry.animationSelected[k];
+
+            animationPromises.push(controller.start({
+              ...animations[animationSelected],
+              transition: {
+                duration: speed,
+                ease: "easeInOut"
+              }
+            }))
+          }
+        }
+        await Promise.all(animationPromises);
+      }
+      const nowSelect = animationSelection - 1;
+      setAnimationSelection(nowSelect);
     }
     console.log("");
     console.log("");
@@ -192,22 +247,22 @@ function AnimationContainer({ topicName }) {
         console.log("in der zweiten schleife drinne");
         console.log("was voher hier war: ", animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j])
         console.log("test for tiefer: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[0])
-        
+
         const animationEntry = animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j];
         const { element, speed } = animationEntry;
         const controller = elementToController[element];
 
         for (let k = 0; k < animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected.length; k++) {
-          
+
           console.log("was in der for raus kommt: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[k]);
 
           const animationSelected = animationEntry.animationSelected[k];
-        
+
           console.log("Animation:", animationSelected);
           // console.log("Element:", element);
           // console.log("Speed:", speed);
           // console.log("Controller:", controller);
-        
+
           // if animationSelection = 0 : erstes element speed = 0
           // if animationSelection = 0 and progress > 0 : nach dem umdrehen eigentlich letztes durchführen und dann den "ersten" klick, alles in einem
 
@@ -220,7 +275,7 @@ function AnimationContainer({ topicName }) {
             console.log("method: " + animationMethod);
             console.log("value: " + animationValue);
             console.log("");
-            
+
 
             // special cases where a parameter needs to be passed
             switch (animationMethod) {
@@ -243,6 +298,11 @@ function AnimationContainer({ topicName }) {
                   }
                 }))
                 break;
+              // ToDo: collapse cases
+              case "top":
+                break;
+              case "right":
+                break;
               default:
                 break;
             }
@@ -255,7 +315,7 @@ function AnimationContainer({ topicName }) {
               ease: "easeInOut"
             }
           }))
-        } 
+        }
       }
       await Promise.all(animationPromises);
     }
@@ -355,161 +415,161 @@ function AnimationContainer({ topicName }) {
       }}>
       <div style={{ position: "relative", width: "60%", maxWidth: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", cursor: "pointer", overflow: "hidden" }}>
 
-      <motion.div
-      className="w-full, h-full flex justify-center"
-      initial={{ visibility: "visible" }}
-      animate={explanationController}
-      >
+        <motion.div
+          className="w-full, h-full flex justify-center"
+          initial={{ visibility: "visible" }}
+          animate={explanationController}
+        >
+          <div
+            style={{
+              width: "50%",
+              height: "100%",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              textAlign: "center",
+              fontSize: "calc(14px + 1vmin)",
+              paddingTop: "30%",
+            }}>
+            Zurück
+          </div>
+          <div
+            style={{
+              width: "50%",
+              height: "100%",
+              position: "absolute",
+              right: 0,
+              top: 0,
+              textAlign: "center",
+              fontSize: "calc(14px + 1vmin)",
+              paddingTop: "30%"
+            }}>
+            Weiter
+          </div>
+
+          <div
+            style={{
+              width: "80%",
+              height: "50%",
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+            Zum steuern der Animationen links oder rechts auf den Bereich klicken oder mit den Pfeiltasten links/rechts.
+          </div>
+        </motion.div>
+
+
+        {/* Steurung über den Bidlschirm */}
         <div
-         style={{
-          width: "50%",
-          height: "100%",
-          position: "absolute",
-          left: 0,
-          top: 0,
-          textAlign: "center",
-          fontSize: "calc(14px + 1vmin)",
-          paddingTop: "30%",
-         }}>
-          Zurück
-        </div>
-        <div
-        style={{
-          width: "50%",
-          height: "100%",
-          position: "absolute",
-          right: 0,
-          top: 0,
-          textAlign: "center",
-          fontSize: "calc(14px + 1vmin)",
-          paddingTop: "30%"
-          }}>
-          Weiter
-        </div>
+          style={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            zIndex: 1,
+          }}
+          className="bg-black opacity-0 hover:opacity-5 duration-200"
+          onClick={() => {
+            handleKeyPress({ key: "ArrowLeft" });
+          }}></div>
 
         <div
-        style={{
-          width: "80%",
-          height: "50%",
-          textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          Zum steuern der Animationen links oder rechts auf den Bereich klicken oder mit den Pfeiltasten links/rechts.
-        </div>
-      </motion.div>
+          style={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            right: 0,
+            top: 0,
+            zIndex: 1,
+          }}
+          className="bg-black opacity-0 hover:opacity-5 duration-200"
+          onClick={() => {
+            handleKeyPress({ key: "ArrowRight" });
+          }}></div>
 
-
-      {/* Steurung über den Bidlschirm */}
-      <div
-        style={{
-          width: "50%",
-          height: "100%",
-          position: "absolute",
-          left: 0,
-          top: 0,
-          zIndex: 1,
-        }}
-        className="bg-black opacity-0 hover:opacity-5 duration-200"
-        onClick={() => {
-          handleKeyPress({ key: "ArrowLeft" });
-        }}></div>
-
-      <div
-        style={{
-          width: "50%",
-          height: "100%",
-          position: "absolute",
-          right: 0,
-          top: 0,
-          zIndex: 1,
-        }}
-        className="bg-black opacity-0 hover:opacity-5 duration-200"
-        onClick={() => {
-          handleKeyPress({ key: "ArrowRight" });
-        }}></div>
-
-      {/* Graphic Animation Container -- the style is for vertically centering, pos = absolute and left = 100% necessary to be out of parent */}
-      <motion.div
-        animate={graphicController}
-        initial={{ position: "absolute", left: "100%" }}
-        style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
+        {/* Graphic Animation Container -- the style is for vertically centering, pos = absolute and left = 100% necessary to be out of parent */}
+        <motion.div
+          animate={graphicController}
+          initial={{ position: "absolute", left: "100%" }}
+          style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
           <GraphicContainer
-          type={animationDataContent.Content[progress].Image.typeImg}
-          src={animationDataContent.Content[progress].Image.src}
-          altText={animationDataContent.Content[progress].Image.alt}
-            />
-      </motion.div>
+            type={animationDataContent.Content[progress].Image.typeImg}
+            src={animationDataContent.Content[progress].Image.src}
+            altText={animationDataContent.Content[progress].Image.alt}
+          />
+        </motion.div>
 
-      {/* Text Animation Container --  */}
-      <motion.div
-        className="title"
-        animate={titleController}
-        initial={{ position: "absolute", right: "100%" }}
-        style={{ width: "50%" }}>
-        <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[0].string} />
-      </motion.div>
+        {/* Text Animation Container --  */}
+        <motion.div
+          className="title"
+          animate={titleController}
+          initial={{ position: "absolute", right: "100%" }}
+          style={{ width: "50%" }}>
+          <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[0].string} />
+        </motion.div>
 
-      <motion.div
-        className="textOne"
-        animate={textControllers[0]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[0],
-        }}
-        style={{ width: "50%" }}>
+        <motion.div
+          className="textOne"
+          animate={textControllers[0]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[0],
+          }}
+          style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 2 ? (
             <AnimationText typeText={animationDataContent.Content[progress].Texts[1].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
           ) : null}
-      </motion.div>
+        </motion.div>
 
-      <motion.div
-        className="textTwo"
-        animate={textControllers[1]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[1],
-        }}
-        style={{ width: "50%" }}>
+        <motion.div
+          className="textTwo"
+          animate={textControllers[1]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[1],
+          }}
+          style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 3 ? (
             <AnimationText typeText={animationDataContent.Content[progress].Texts[2].typeText} text={animationDataContent.Content[progress].Texts[2].string} />
           ) : null}
-      </motion.div>
+        </motion.div>
 
-      <motion.div
-        className="textThree"
-        animate={textControllers[2]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[2],
-        }}
-        style={{ width: "50%" }}>
+        <motion.div
+          className="textThree"
+          animate={textControllers[2]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[2],
+          }}
+          style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 4 ? (
             <AnimationText typeText={animationDataContent.Content[progress].Texts[3].typeText} text={animationDataContent.Content[progress].Texts[3].string} />
           ) : null}
-      </motion.div>
+        </motion.div>
 
-      <motion.div
-        className="textFour"
-        animate={textControllers[3]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[3],
-        }}
-        style={{ width: "50%" }}>
+        <motion.div
+          className="textFour"
+          animate={textControllers[3]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[3],
+          }}
+          style={{ width: "50%" }}>
           {animationDataContent.Content[progress].Texts.length >= 5 ? (
             <AnimationText typeText={animationDataContent.Content[progress].Texts[4].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
           ) : null}
-      </motion.div>
+        </motion.div>
       </div>
     </div>
     // anstatt null, default Text setzen, sie sind aber hiddens
