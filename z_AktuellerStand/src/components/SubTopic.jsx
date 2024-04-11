@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import AppContext from './AppContext';
 import { Link } from "react-router-dom";
-import exampleImg from '../assets/images/exampleImg.gif';
 
-const SubTopic = ({ topicName }) => {
+const SubTopic = ({ topicName, image }) => {
     const topicContents = useContext(AppContext);
     const [contentNames, setContentNames] = useState([]);
     const [isHovered, setIsHovered] = useState(false);
@@ -15,10 +14,10 @@ const SubTopic = ({ topicName }) => {
     return (
         <div style={subTopic_style}>
             <Link to={`subtopic/${topicName}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                <div className="img-container h-24 w-full" style={{ background: '#817c9c', borderRadius: '10px 10px 0px 0px' }}>
-                    <img src={exampleImg} alt="img-placeholder" />
+                <div className="img-container h-32 w-full mb-5" style={{ borderRadius: '10px 10px 0px 0px', padding: '0px 33px' }}>
+                    <div className='h2 absolute mt-20 -ml-1 cursor-pointer' style={{color: isHovered ? '#d177b3' : '#21202b'}}>{topicName}</div>
+                    <img src={image} className='opacity-50' alt="img-placeholder" />
                 </div>
-                <div className='h2 m-5 self-start cursor-pointer' style={{ color: isHovered ? '#d177b3' : '#21202b' }}>{topicName}</div>
             </Link>
             {contentNames.map((content, index) => (
                 <Link to={`subtopic/${topicName}`} state={{ clickedContent: content }} key={index} className='h4 arrow-btn'>
