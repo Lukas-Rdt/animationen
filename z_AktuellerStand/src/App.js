@@ -29,7 +29,7 @@ const topicContents = {
   },
   Designimplikationen: {
     Video: {
-      link: "https://www.youtube-nocookie.com/embed/LDvVRvG7OB0?si=R1yp1rZWo-kn1qo0&amp;rel=0&amp;modestbranding=1",
+      link: "https://www.youtube-nocookie.com/embed/0rPt4Grl8D4?si=2BKL-W0acY6LRGPu&rel=0&modestbranding=1",
       title: "Einleitungsvideo",
     },
     "Weitergehende Kriterien":
