@@ -8,7 +8,7 @@ export const TopicData = {
         Animation: true,
     },
     Designimplikationen: {
-        Video: false,
+        Video: true,
         Animation: true,
     },
     Fazit: {

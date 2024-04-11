@@ -169,19 +169,41 @@ const SubTopicPage = () => {
             </div>
           ) : null}
           {subtopicId === "Fazit" && (
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+            }}>
               <iframe
+                ref={websiteRef}
+                src={"https://tinobreier.github.io/dos-and-donts/#/interaktiv"}
+                title={videoContent.title}
+                allowFullScreen
+                style={{
+                    border: "0",
+                    height: `${websiteHeight}px`,
+                    width: "80%",
+                    maxWidth: "2000px",
+                    margin: '100px',
+                    borderRadius: "20px",
+                }}></iframe>
+                <iframe
                 ref={websiteRef}
                 src={"https://hkuswik.github.io/quiz_uxfuerki_ba/"}
                 title={videoContent.title}
                 allowFullScreen
                 style={{
-                  border: "0",
-                  height: `${websiteHeight}px`,
-                  width: "80%",
-                  maxWidth: "2000px",
-                  margin: '100px',
-                  borderRadius: "20px",
+                    border: "0",
+                    height: `${websiteHeight}px`,
+                    width: "80%",
+                    maxWidth: "2000px",
+                    margin: '100px',
+                    borderRadius: "20px",
                 }}></iframe>
+            </div>
           )}
         </div>
       )}
