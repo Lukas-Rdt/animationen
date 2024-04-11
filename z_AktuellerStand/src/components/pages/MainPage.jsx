@@ -32,7 +32,7 @@ const MainPage = () => {
 
     return (
         <div className='Mainpage flex flex-col items-center'>
-            <div className='self-center h1 mt-20 mb-20'>Der EU AI Act</div>
+            <div className='self-center h1 mt-20 mb-20'>Wegweiser UX für KI</div>
             <div className='mb-20' style={item_row}>
                 <SubTopic topicName={topicNames[0]} image={imageNr1} />
                 <SubTopic topicName={topicNames[1]} image={imageNr2} />

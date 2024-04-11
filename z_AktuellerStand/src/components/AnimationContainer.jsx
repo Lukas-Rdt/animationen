@@ -16,12 +16,8 @@ function AnimationContainer({ topicName }) {
    * 4 = remove all + increase progress
    */
   const [animationSelection, setAnimationSelection] = useState(0);
-  // progress of the text appearance
-  const [textProgress, setTextProgress] = useState(0);
   // Progress in the module
   const [progress, setProgress] = useState(0);
-  // last Progress in module
-  const [lastProgress, setLastProgress] = useState(0);
 
   // top values for the positioning
   const [textTopValuesMove, setTextTopValuesMove] = useState([
@@ -45,18 +41,25 @@ function AnimationContainer({ topicName }) {
   // handles the correct animation
   const handleKeyPress = (event) => {
     if (event.key === "ArrowLeft") {
-      if (progress === 0 && animationSelection === 2) {
-        explanationController.start(animations.showExplanation);
+      if (progress === 0 && animationSelection === 1) {
+        explanationController.start({
+          ...animations.show,
+          transition: {
+            duration: 1.5,
+            ease: "easeInOut",
+            delay: 1.5
+          }
+        });
       }
+      // TODO: that is correct here???
       if (animationSelection === 0 && progress !== 0) {
-        setLastProgress(progress);
         setProgress((prevProgress) => prevProgress - 1);
       }
-      //nextAnimation("back");
+      nextAnimation("back");
       //backwardAnimations();
-      lastAnimation();
+      //lastAnimation();
     } else if (event.key === "ArrowRight") {
-      nextAnimation();
+      nextAnimation("next");
       explanationController.start(animations.hide);
       //forwardAnimation();
     }
@@ -70,214 +73,66 @@ function AnimationContainer({ topicName }) {
     }
   })
 
-  const addExistingTopValues = () => {
-    if (textValuesHistory[progress] === undefined) {
-      setTextValuesHistory((prevArray) => [...prevArray, textTopValuesMove]);
-    }
-  };
-
-
-  /*
-  Bugs:
-   - Screen 2 farbiger Schriftzug geht nciht zurück.
-   - Später kommt Text und verschwindet wieder : überall passende classes wählen, splicing korrigieren
-   */
-  const lastAnimation = async () => {
-    let lastAnimationOrder;
-    const animationPromises = [];
-    console.log("");
-    console.log("");
-    console.log("");
-    // console.log(lastAnimationOrder);
-    // console.log("lastAnimationOrder[lastAnimationOrder.length - 1].length : " + lastAnimationOrder[lastAnimationOrder.length - 1].length);
-    if ((progress === 0 && animationSelection === 0) || (progress === animationDataContent.Content.length && animationSelection === animationDataContent.Content[progress].AnimationOrder.length)) {
-      return;
-    } else if (progress > 0 && animationSelection === 0) {
-      lastAnimationOrder = animationDataContent.Content[progress - 1].AnimationOrder;
-      console.log("direkt nach einlesen:")
-      console.log(lastAnimationOrder);
-      let firstEntry = lastAnimationOrder[0].shift();
-      lastAnimationOrder.unshift([firstEntry]);
-
-      console.log(lastAnimationOrder);
-      /*
-      if (lastAnimationOrder.length === 2) {
-        lastAnimationOrder.splice(1, 1);
-      } else {
-        lastAnimationOrder.splice(1, 1);
-        lastAnimationOrder.splice(lastAnimationOrder.length - 2, 1);
-      }
-      */
-      console.log("Nach splicing:");
-      console.log(lastAnimationOrder);
-
-      const lastIndex = lastAnimationOrder.length - 1;
-      if (lastIndex > 0) {
-        const lastEntrySubarrays = lastAnimationOrder[lastIndex];
-        lastAnimationOrder[lastIndex - 1].push(...lastEntrySubarrays);
-        lastAnimationOrder.pop()
-      }
-      lastAnimationOrder.forEach(subarray => subarray.reverse());
-      console.log("nach reverse");
-      console.log(lastAnimationOrder);
-
-      for (let i = 0; i < lastAnimationOrder[lastAnimationOrder.length - 1].length; i++) {
-        console.log(i + ", " + lastAnimationOrder.length);
-        for (let j = 0; j < lastAnimationOrder[lastAnimationOrder.length - 1][i].length; j++) {
-
-          const animationEntry = lastAnimationOrder[lastAnimationOrder.length - 1][i][j];
-          const { element, speed } = animationEntry;
-          const controller = elementToController[element];
-
-          for (let k = 0; k < lastAnimationOrder[lastAnimationOrder.length - 1][i][j].animationSelected.length; k++) {
-            const animationSelected = animationEntry.animationSelected[k];
-            // only if animationSelection === max length
-            if (animationSelection === lastAnimationOrder.length -1) {
-              if (animationSelected === "hide") {
-                animationPromises.push(controller.start({
-                  ...animations.show,
-                  transition: {
-                    duration: speed,
-                    ease: "easeInOut"
-                  }
-                }))
-              } else if (animationSelected === "show") {
-                animationPromises.push(controller.start({
-                  ...animations.hide,
-                  transition: {
-                    duration: speed,
-                    ease: "easeInOut"
-                  }
-                }))
-              } else {
-                animationPromises.push(controller.start({
-                  ...animations[animationSelected],
-                  transition: {
-                    duration: speed,
-                    ease: "easeInOut"
-                  }
-                }))
-              }
-            }
-          }
-        }
-        await Promise.all(animationPromises);
-      }
-      const nowSelect = lastAnimationOrder.length - 1;
-      setAnimationSelection(nowSelect);
-      const nowProgress = progress - 1;
-      setProgress(nowProgress);
-    } else {
-
-      lastAnimationOrder = animationDataContent.Content[progress].AnimationOrder;
-      console.log("direkt nach einlesen:")
-      console.log(lastAnimationOrder);
-      let firstEntry = lastAnimationOrder[0].shift();
-      lastAnimationOrder.unshift([firstEntry]);
-
-      console.log(lastAnimationOrder);
-
-      // check if working as intendet
-      if (lastAnimationOrder.length === 2) {
-        lastAnimationOrder.splice(1, 1);
-      } else {
-        lastAnimationOrder.splice(1, 1);
-        lastAnimationOrder.splice(lastAnimationOrder.length - 2, 1);
-      }
-      console.log("Nach splicing:");
-      console.log(lastAnimationOrder);
-
-      const lastIndex = lastAnimationOrder.length - 1;
-      if (lastIndex > 0) {
-        const lastEntrySubarrays = lastAnimationOrder[lastIndex];
-        lastAnimationOrder[lastIndex - 1].push(...lastEntrySubarrays);
-        lastAnimationOrder.pop()
-      }
-      lastAnimationOrder.forEach(subarray => subarray.reverse());
-      console.log("nach reverse");
-      console.log(lastAnimationOrder);
-
-      for (let i = 0; i < lastAnimationOrder[animationSelection - 1].length; i++) {
-        console.log(i + ", " + lastAnimationOrder.length);
-        for (let j = 0; j < lastAnimationOrder[animationSelection - 1][i].length; j++) {
-
-          const animationEntry = lastAnimationOrder[animationSelection - 1][i][j];
-          const { element, speed } = animationEntry;
-          const controller = elementToController[element];
-
-          for (let k = 0; k < lastAnimationOrder[animationSelection - 1][i][j].animationSelected.length; k++) {
-            const animationSelected = animationEntry.animationSelected[k];
-
-            animationPromises.push(controller.start({
-              ...animations[animationSelected],
-              transition: {
-                duration: speed,
-                ease: "easeInOut"
-              }
-            }))
-          }
-        }
-        await Promise.all(animationPromises);
-      }
-      const nowSelect = animationSelection - 1;
-      setAnimationSelection(nowSelect);
-    }
-    console.log("");
-    console.log("");
-    console.log("");
-  }
-
+  // WHEN BACK ANIMATION JUST DO ANIMATIONSELECTION - 1 
   /**
    * TEMPORARY SOLUTION FOR PRESENTATION - MIGHT BECOME PERMAMENT
    */
-  const nextAnimation = async () => {
-    console.log("Anfang nextAnimation:");
-    console.log("selection: ", animationSelection);
+  const nextAnimation = async (direction) => {
     const animationPromises = [];
+    let usedProgress = progress;
+    let usedAnimationSelection;
+    if (direction === "next") {
+      console.log("\nCASE NEXT", 'color: blue; font-size: 20px;')
+      console.log(animationDataContent.Content.length - 1);
+      console.log(animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length)
+      if (usedProgress === animationDataContent.Content.length - 1 && animationSelection === animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length) {
+        return;
+      }
+      usedAnimationSelection = animationSelection;
+    } else if (direction === "back" && animationSelection === 0) {
+      console.log('%cCASE PROGRESS - 1', 'color: blue; font-size: 20px;');
+      console.log("selection: ", usedAnimationSelection);
+      usedAnimationSelection = animationDataContent.Content[usedProgress - 1].AnimationOrder.length - 1;
+      console.log("after ne aplly: ", usedAnimationSelection);
+      console.log("usedProgress - 1. order:");
+      console.log(animationDataContent.Content[usedProgress - 1].AnimationOrder);
+      setAnimationSelection(usedAnimationSelection);
+      usedProgress = progress - 1;
+      setProgress(usedProgress);
+    } else {
+      console.log("\n CASE DEAFULT SELECTION - 1", 'color: blue; font-size: 20px;');
+      usedAnimationSelection = animationSelection - 1;
+      setAnimationSelection(usedAnimationSelection);
+    }
+    console.log("now animation value used:");
+    console.log(usedAnimationSelection);
 
-    // progress 0, selection 0,
-    // progress max, selection max (vlt letzten hide entfernen ~ absprechen wie man es macht)
-    // progress > 0, selection 0
-    // progress x, selection x, aber nichts von dem darüber ~ default
+    console.log("now used progress value:");
+    console.log(usedProgress);
 
-    console.log(animationDataContent.Content[progress].AnimationOrder[animationSelection]);
-    for (let i = 0; i < animationDataContent.Content[progress].AnimationOrder[animationSelection].length; i++) {
-      //console.log("Anzahl Animationen in diesem Block: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length);
+    const animationData = direction === "next" ? animationDataContent.Content[usedProgress].AnimationOrder[usedAnimationSelection] : animationDataContent.Content[usedProgress].AnimationOrderRev[usedAnimationSelection];
 
-      for (let j = 0; j < animationDataContent.Content[progress].AnimationOrder[animationSelection][i].length; j++) {
 
-        // console.log("in der zweiten schleife drinne");
-        // console.log("was voher hier war: ", animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j])
-        // console.log("test for tiefer: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[0])
+    console.log(animationDataContent.Content[usedProgress].AnimationOrder[usedAnimationSelection]);
+    for (let i = 0; i < animationData.length; i++) {
 
-        const animationEntry = animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j];
+      for (let j = 0; j < animationData[i].length; j++) {
+
+        const animationEntry = animationData[i][j];
         const { element, speed } = animationEntry;
         const controller = elementToController[element];
 
-        for (let k = 0; k < animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected.length; k++) {
-
-          // console.log("was in der for raus kommt: " + animationDataContent.Content[progress].AnimationOrder[animationSelection][i][j].animationSelected[k]);
+        for (let k = 0; k < animationEntry.animationSelected.length; k++) {
 
           const animationSelected = animationEntry.animationSelected[k];
 
-          // console.log("Animation:", animationSelected);
-          // console.log("Element:", element);
-          // console.log("Speed:", speed);
-          // console.log("Controller:", controller);
-
           // if animationSelection = 0 : erstes element speed = 0
           // if animationSelection = 0 and progress > 0 : nach dem umdrehen eigentlich letztes durchführen und dann den "ersten" klick, alles in einem
-
 
           if (animationSelected.includes(":")) {
             const stringParts = animationSelected.split(":");
             const animationMethod = stringParts[0];
             const animationValue = stringParts[1];
-            // console.log("");
-            // console.log("method: " + animationMethod);
-            // console.log("value: " + animationValue);
-            // console.log("");
-
 
             // special cases where a parameter needs to be passed
             switch (animationMethod) {
@@ -300,8 +155,17 @@ function AnimationContainer({ topicName }) {
                   }
                 }))
                 break;
-              // ToDo: collapse cases
+              // TODO: collapse cases
               case "top":
+                console.log('%cCASE TOP: ', 'font-size: 20px');
+                console.log(animationValue);
+                animationPromises.push(controller.start({
+                  ...animations.top(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
                 break;
               case "right":
                 break;
@@ -320,14 +184,13 @@ function AnimationContainer({ topicName }) {
         }
       }
       await Promise.all(animationPromises);
+      console.log("animationen durchgeführt");
     }
-    const newSelect = animationSelection + 1;
-    setAnimationSelection(newSelect);
-    console.log("AnimationSelection after increase: " + animationSelection);
-    console.log("Inhalt in AnimationOrder: ", animationDataContent.Content[progress].AnimationOrder[animationSelection]);
-    console.log("Länge in AnimationOrder: ", animationDataContent.Content[progress].AnimationOrder.length)
-    if (animationSelection === animationDataContent.Content[progress].AnimationOrder.length - 1) {
-      console.log("Reset Selection, increase Porgress");
+    if (direction === "next") {
+      const newSelect = animationSelection + 1;
+      setAnimationSelection(newSelect);
+    }
+    if (direction === "next" && animationSelection === animationDataContent.Content[progress].AnimationOrder.length - 1) {
       setProgress((prevProgress) => prevProgress + 1);
       setAnimationSelection(0);
     }
