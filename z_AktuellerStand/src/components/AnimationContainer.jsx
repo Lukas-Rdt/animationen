@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { animations } from "./animations";
 import { GraphicContainer } from "./GraphicContainer";
-import { AnimationTitle } from "./AnimationTitle";
 import { AnimationText } from "./AnimationText";
 import { AnimationData } from "./AnimationData";
 
@@ -16,13 +15,9 @@ function AnimationContainer({ topicName }) {
    * 3 = loop with texts
    * 4 = remove all + increase progress
    */
-  const [animationSelection, setAnimationSelection] = useState(1);
-  // progress of the text appearance
-  const [textProgress, setTextProgress] = useState(0);
+  const [animationSelection, setAnimationSelection] = useState(0);
   // Progress in the module
   const [progress, setProgress] = useState(0);
-  // last Progress in module
-  const [lastProgress, setLastProgress] = useState(0);
 
   // top values for the positioning
   const [textTopValuesMove, setTextTopValuesMove] = useState([
@@ -46,13 +41,27 @@ function AnimationContainer({ topicName }) {
   // handles the correct animation
   const handleKeyPress = (event) => {
     if (event.key === "ArrowLeft") {
-      if (animationSelection === 1 && progress !== 0) {
-        setLastProgress(progress);
+      if (progress === 0 && animationSelection === 1) {
+        explanationController.start({
+          ...animations.show,
+          transition: {
+            duration: 1.5,
+            ease: "easeInOut",
+            delay: 1.5
+          }
+        });
+      }
+      // TODO: that is correct here???
+      if (animationSelection === 0 && progress !== 0) {
         setProgress((prevProgress) => prevProgress - 1);
       }
-      backwardAnimations();
+      nextAnimation("back");
+      //backwardAnimations();
+      //lastAnimation();
     } else if (event.key === "ArrowRight") {
-      forwardAnimation();
+      nextAnimation("next");
+      explanationController.start(animations.hide);
+      //forwardAnimation();
     }
   };
 
@@ -64,148 +73,137 @@ function AnimationContainer({ topicName }) {
     }
   })
 
-  const addExistingTopValues = () => {
-    if (textValuesHistory[progress] === undefined) {
-      setTextValuesHistory((prevArray) => [...prevArray, textTopValuesMove]);
+  // WHEN BACK ANIMATION JUST DO ANIMATIONSELECTION - 1 
+  /**
+   * TEMPORARY SOLUTION FOR PRESENTATION - MIGHT BECOME PERMAMENT
+   */
+  const nextAnimation = async (direction) => {
+    const animationPromises = [];
+    let usedProgress = progress;
+    let usedAnimationSelection;
+    if (direction === "next") {
+      console.log("\nCASE NEXT", 'color: blue; font-size: 20px;')
+      console.log(animationDataContent.Content.length - 1);
+      console.log(animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length)
+      if (usedProgress === animationDataContent.Content.length - 1 && animationSelection === animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length) {
+        return;
+      }
+      usedAnimationSelection = animationSelection;
+    } else if (direction === "back" && animationSelection === 0) {
+      console.log('%cCASE PROGRESS - 1', 'color: blue; font-size: 20px;');
+      console.log("selection: ", usedAnimationSelection);
+      usedAnimationSelection = animationDataContent.Content[usedProgress - 1].AnimationOrder.length - 1;
+      console.log("after ne aplly: ", usedAnimationSelection);
+      console.log("usedProgress - 1. order:");
+      console.log(animationDataContent.Content[usedProgress - 1].AnimationOrder);
+      setAnimationSelection(usedAnimationSelection);
+      usedProgress = progress - 1;
+      setProgress(usedProgress);
+    } else {
+      console.log("\n CASE DEAFULT SELECTION - 1", 'color: blue; font-size: 20px;');
+      usedAnimationSelection = animationSelection - 1;
+      setAnimationSelection(usedAnimationSelection);
     }
-  };
+    console.log("now animation value used:");
+    console.log(usedAnimationSelection);
 
-  const forwardAnimation = async () => {
-    switch (animationSelection) {
-      case 1:
-        updateYValues();
-        await Promise.all([
-          graphicController.start(animations.rightGraphicIn),
-          titleController.start(animations.leftTitleIn),
-          textControllers.map(controller => controller.start(animations.leftTitleIn))
-        ]);
-        setAnimationSelection(2);
-        break;
-      case 2:
-        console.log("case 2 textprogress: " + textProgress);
-        addExistingTopValues();
-        await titleController.start(animations.leftTitleUp);
-        textControllers.forEach((controller, i) => {
-          controller.start(animations.hiddenTextReset(textTopValuesMove[i]));
-          console.log(textTopValuesMove[i]);
-        });
-        setAnimationSelection(3);
-        break;
-      case 3:
-        console.log("textprogress: " + textProgress);
-        if (textProgress >= 0 && textProgress < animationDataContent.Stichpunkte[progress].length) {
-          console.log(textTopValuesMove[textProgress]);
-          textControllers[textProgress].start(animations.textOp);
-          console.log(textTopValuesMove[textProgress]);
-          if (textProgress === animationDataContent.Stichpunkte[progress].length - 1) {
-            setAnimationSelection(4);
-            // Reset for text progress
-            setTextProgress(0);
-          } else {
-            setTextProgress(textProgress + 1);
+    console.log("now used progress value:");
+    console.log(usedProgress);
+
+    const animationData = direction === "next" ? animationDataContent.Content[usedProgress].AnimationOrder[usedAnimationSelection] : animationDataContent.Content[usedProgress].AnimationOrderRev[usedAnimationSelection];
+
+
+    console.log(animationDataContent.Content[usedProgress].AnimationOrder[usedAnimationSelection]);
+    for (let i = 0; i < animationData.length; i++) {
+
+      for (let j = 0; j < animationData[i].length; j++) {
+
+        const animationEntry = animationData[i][j];
+        const { element, speed } = animationEntry;
+        const controller = elementToController[element];
+
+        for (let k = 0; k < animationEntry.animationSelected.length; k++) {
+
+          const animationSelected = animationEntry.animationSelected[k];
+
+          // if animationSelection = 0 : erstes element speed = 0
+          // if animationSelection = 0 and progress > 0 : nach dem umdrehen eigentlich letztes durchführen und dann den "ersten" klick, alles in einem
+
+          if (animationSelected.includes(":")) {
+            const stringParts = animationSelected.split(":");
+            const animationMethod = stringParts[0];
+            const animationValue = stringParts[1];
+
+            // special cases where a parameter needs to be passed
+            switch (animationMethod) {
+              // special case if a anchor (top, right, bottom, left) needs to be removed for another to be in effect
+              case "remove":
+                animationPromises.push(controller.start({
+                  ...animations.unset(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+                break;
+              case "color":
+                animationPromises.push(controller.start({
+                  ...animations.color(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+                break;
+              // TODO: collapse cases
+              case "top":
+                console.log('%cCASE TOP: ', 'font-size: 20px');
+                console.log(animationValue);
+                animationPromises.push(controller.start({
+                  ...animations.top(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
+                break;
+              case "right":
+                break;
+              default:
+                break;
+            }
           }
-        } else {
-          setAnimationSelection(4);
-          // Reset for text progress
-          setTextProgress(0);
-        }
-        break;
-      case 4:
-        setTextProgress(0);
-        await Promise.all([
-          graphicController.start(animations.rightGraphicOut),
-          titleController.start(animations.leftTitleOut),
-          textControllers.map(controller => controller.start(animations.leftTextOut))
-        ]);
-        await Promise.all([
-          titleController.start(animations.hiddenTitleReset),
-          textControllers.map(controller => controller.start(animations.setTextsHidden))
-        ]);
-        textControllers.forEach((controller, i) => {
-          controller.start(animations.setTextsHidden);
-        });
-        setAnimationSelection(1);
-        setLastProgress(progress);
-        // move to useState when starting component
-        const minLegnth = Math.min(animationDataContent.Titel.length, animationDataContent.Bilder.length, animationDataContent.Stichpunkte.length);
-        if (progress < minLegnth - 1) {
-          setProgress((prevProgress) => prevProgress + 1);
-        }
-        break;
-      default:
-        console.log("Error: Unknown animation selection");
-        setProgress(1);
-        break;
-    }
-  };
 
-  const backwardAnimations = async () => {
-    switch (animationSelection) {
-      case 1:
-        if (progress === 0 && lastProgress === 0) {
-          return;
+          animationPromises.push(controller.start({
+            ...animations[animationSelected],
+            transition: {
+              duration: speed,
+              ease: "easeInOut"
+            }
+          }))
         }
-        //setProgress(prevProgress => prevProgress - 1);
-        updateYValues();
-
-        // texte von außen reinfliegen lassen
-        setTextProgress(animationDataContent.Stichpunkte[progress].length);
-        titleController.start(animations.hiddenTitleSetUp);
-        /*
-        textControllers.forEach((controller, i) => {
-          controller.start(animations.hiddenTextReset(textTopValuesMove[i]));
-          console.log(textTopValuesMove[i]);
-        })
-        */
-        setNewTextTops();
-        await Promise.all([
-          graphicController.start(animations.rightGraphicIn),
-          titleController.start(animations.leftTitleIn),
-          textControllers.forEach((controller) => {
-            controller.start(animations.leftTextIn);
-          }),
-          ...animationDataContent.Stichpunkte[progress - 1].map((_, i) => {
-            textControllers[i].start(animations.hiddenTextOp);
-          }),
-        ]);
-        console.log("Progress: " + progress);
-        setLastProgress(0);
-        setAnimationSelection(4);
-        break;
-      case 2:
-        await Promise.all([
-          graphicController.start(animations.rightGraphicOut),
-          titleController.start(animations.leftTitleOut),
-          // text outside so they can fly in afterwards
-          textControllers.map(controller => controller.start(animations.leftTextOut))
-        ]);
-        //setProgress(prevProgress => prevProgress - 1);
-        setAnimationSelection(1);
-        break;
-      case 3:
-        if (textProgress === 0) {
-          await titleController.start(animations.resetTitleMid);
-          console.log("reset title mid");
-          setAnimationSelection(2);
-        } else {
-          textControllers[textProgress - 1].start(animations.resetTextOp);
-          setTextProgress(textProgress - 1);
-        }
-        break;
-      case 4:
-        // auf text progress textlist length zurück
-        textControllers[animationDataContent.Stichpunkte[progress].length - 1].start(
-          animations.resetTextOp
-        );
-        setTextProgress(animationDataContent.Stichpunkte[progress].length - 1);
-        setAnimationSelection(3);
-        break;
-      default:
-        break;
+      }
+      await Promise.all(animationPromises);
+      console.log("animationen durchgeführt");
     }
-  };
+    if (direction === "next") {
+      const newSelect = animationSelection + 1;
+      setAnimationSelection(newSelect);
+    }
+    if (direction === "next" && animationSelection === animationDataContent.Content[progress].AnimationOrder.length - 1) {
+      setProgress((prevProgress) => prevProgress + 1);
+      setAnimationSelection(0);
+    }
+  }
+
+  useEffect(() => {
+    console.log("useEffect:");
+    console.log("Effect selection: ", animationSelection);
+    console.log("Progress: ", progress);
+  }, [animationSelection, progress])
 
   // assignment to animation controller
+  const explanationController = useAnimation();
   const graphicController = useAnimation();
   const titleController = useAnimation();
 
@@ -216,6 +214,15 @@ function AnimationContainer({ topicName }) {
     useAnimation(),
     useAnimation(),
   ];
+
+  const elementToController = {
+    "image": graphicController,
+    "text0": titleController,
+    "text1": textControllers[0],
+    "text2": textControllers[1],
+    "text3": textControllers[2],
+    "text4": textControllers[3]
+  }
 
   // Calculate the correct top values for the text elements
   const updateYValues = () => {
@@ -274,111 +281,166 @@ function AnimationContainer({ topicName }) {
         justifyContent: "center",
         marginBottom: "100px"
       }}>
-        <div style={{ position: "relative", width: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", 
-        overflow: "hidden",}}>
+      <div style={{ position: "relative", width: "60%", maxWidth: "1000px", height: "563px", backgroundColor: "white", borderRadius: "20px", cursor: "pointer", overflow: "hidden" }}>
 
-      {/* Steurung über den Bidlschirm */}
-      <div
-        style={{
-          width: "50%",
-          height: "100%",
-          position: "absolute",
-          left: 0,
-          top: 0,
-          zIndex: 1,
-        }}
-        onClick={() => {
-          handleKeyPress({ key: "ArrowLeft" });
-        }}></div>
+        <motion.div
+          className="w-full, h-full flex justify-center"
+          initial={{ visibility: "visible" }}
+          animate={explanationController}
+        >
+          <div
+            style={{
+              width: "50%",
+              height: "100%",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              textAlign: "center",
+              fontSize: "calc(14px + 1vmin)",
+              paddingTop: "30%",
+            }}>
+            Zurück
+          </div>
+          <div
+            style={{
+              width: "50%",
+              height: "100%",
+              position: "absolute",
+              right: 0,
+              top: 0,
+              textAlign: "center",
+              fontSize: "calc(14px + 1vmin)",
+              paddingTop: "30%"
+            }}>
+            Weiter
+          </div>
 
-      <div
-        style={{
-          width: "50%",
-          height: "100%",
-          position: "absolute",
-          right: 0,
-          top: 0,
-          zIndex: 1,
-        }}
-        onClick={() => {
-          handleKeyPress({ key: "ArrowRight" });
-        }}></div>
+          <div
+            style={{
+              width: "80%",
+              height: "50%",
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+            Zum steuern der Animationen links oder rechts auf den Bereich klicken oder mit den Pfeiltasten links/rechts.
+          </div>
+        </motion.div>
 
-      {/* Graphic Animation Container -- the style is for vertically centering, pos = absolute and left = 100% necessary to be out of parent */}
-      <motion.div
-        animate={graphicController}
-        initial={{ position: "absolute", left: "100%" }}
-        style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
+
+        {/* Steurung über den Bidlschirm */}
+        <div
+          style={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            zIndex: 1,
+          }}
+          className="bg-black opacity-0 hover:opacity-5 duration-200"
+          onClick={() => {
+            handleKeyPress({ key: "ArrowLeft" });
+          }}></div>
+
+        <div
+          style={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            right: 0,
+            top: 0,
+            zIndex: 1,
+          }}
+          className="bg-black opacity-0 hover:opacity-5 duration-200"
+          onClick={() => {
+            handleKeyPress({ key: "ArrowRight" });
+          }}></div>
+
+        {/* Graphic Animation Container -- the style is for vertically centering, pos = absolute and left = 100% necessary to be out of parent */}
+        <motion.div
+          animate={graphicController}
+          initial={{ position: "absolute", left: "100%" }}
+          style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
           <GraphicContainer
-          type={animationDataContent.Bilder[progress].type}
-            src={animationDataContent.Bilder[progress].src}
-            altText={animationDataContent.Bilder[progress].alt}
-            />
-      </motion.div>
+            type={animationDataContent.Content[progress].Image.typeImg}
+            src={animationDataContent.Content[progress].Image.src}
+            altText={animationDataContent.Content[progress].Image.alt}
+          />
+        </motion.div>
 
-      {/* Title Animation Container --  */}
-      <motion.div
-        className="title"
-        animate={titleController}
-        initial={{ position: "absolute", right: "100%" }}
-        style={{ width: "50%", top: "50%", transform: "translateY(-50%)" }}>
-        <AnimationTitle titleText={animationDataContent.Titel[progress]} />
-      </motion.div>
+        {/* Text Animation Container --  */}
+        <motion.div
+          className="title"
+          animate={titleController}
+          initial={{ position: "absolute", right: "100%" }}
+          style={{ width: "50%" }}>
+          <AnimationText typeText={animationDataContent.Content[progress].Texts[0].typeText} text={animationDataContent.Content[progress].Texts[0].string} />
+        </motion.div>
 
-      {/* Text Animation Containers */}
-      <motion.div
-        className="textOne"
-        animate={textControllers[0]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[0],
-        }}
-        style={{ width: "50%" }}>
-          <AnimationText text={animationDataContent.Stichpunkte[progress][0]} />
-      </motion.div>
+        <motion.div
+          className="textOne"
+          animate={textControllers[0]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[0],
+          }}
+          style={{ width: "50%" }}>
+          {animationDataContent.Content[progress].Texts.length >= 2 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[1].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
+          ) : null}
+        </motion.div>
 
-      <motion.div
-        className="textTwo"
-        animate={textControllers[1]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[1],
-        }}
-        style={{ width: "50%" }}>
-            <AnimationText text={animationDataContent.Stichpunkte[progress][1]} />
-      </motion.div>
+        <motion.div
+          className="textTwo"
+          animate={textControllers[1]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[1],
+          }}
+          style={{ width: "50%" }}>
+          {animationDataContent.Content[progress].Texts.length >= 3 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[2].typeText} text={animationDataContent.Content[progress].Texts[2].string} />
+          ) : null}
+        </motion.div>
 
-      <motion.div
-        className="textThree"
-        animate={textControllers[2]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[2],
-        }}
-        style={{ width: "50%" }}>
-        <AnimationText text={animationDataContent.Stichpunkte[progress][2]} />
-      </motion.div>
+        <motion.div
+          className="textThree"
+          animate={textControllers[2]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[2],
+          }}
+          style={{ width: "50%" }}>
+          {animationDataContent.Content[progress].Texts.length >= 4 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[3].typeText} text={animationDataContent.Content[progress].Texts[3].string} />
+          ) : null}
+        </motion.div>
 
-      <motion.div
-        className="textFour"
-        animate={textControllers[3]}
-        initial={{
-          position: "absolute",
-          opacity: 0,
-          right: "50%",
-          top: textTopValuesMove[3],
-        }}
-        style={{ width: "50%" }}>
-        <AnimationText text={animationDataContent.Stichpunkte[progress][3]} />
-      </motion.div>
+        <motion.div
+          className="textFour"
+          animate={textControllers[3]}
+          initial={{
+            position: "absolute",
+            opacity: 0,
+            right: "50%",
+            top: textTopValuesMove[3],
+          }}
+          style={{ width: "50%" }}>
+          {animationDataContent.Content[progress].Texts.length >= 5 ? (
+            <AnimationText typeText={animationDataContent.Content[progress].Texts[4].typeText} text={animationDataContent.Content[progress].Texts[1].string} />
+          ) : null}
+        </motion.div>
       </div>
     </div>
+    // anstatt null, default Text setzen, sie sind aber hiddens
   );
 }
 /*
