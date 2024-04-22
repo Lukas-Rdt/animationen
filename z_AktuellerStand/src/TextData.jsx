@@ -3,10 +3,10 @@ export const TextData = {
         VideoLink: "https://www.youtube-nocookie.com/embed/HLgKwZkm59M?si=p-12Mfp5IoZCa5aq&amp;rel=0&amp;modestbranding=1",
         Texte: [
             { title: "EU AI Act", texts: [
-                "Ziele des EU AI Acts:",
+                "## Ziele des EU AI Acts:",
                 "Mit dem Eu AI Act haben es sich die Mitgliedsstaaten der EU zum Ziel gesetzt das erste umfassende Regularium für den Umgang mit KI basierten Systemen zu verfassen. Ziel ist es rechtliche Rahmenbedingungen zu schaffen in denen KI Projekte in Wirtschaft, Forschung und Gesellschaft so eingesetzt und entwickelt werden können, dass ein vertrauenswürdiger Umgang mit den Systemen möglich ist, die die fundamentalen Rechte der Nutzenden, aber auch Aspekte wie Sicherheit und das Handeln auf Grundlage ethischer Prinzipien mit einbeziehen. Dabei soll der EU AI Act eine über die Grenzen der EU hinausgehenden Impuls setzen und ähnlich wie die DSGVO im Datenschutz einen Standard stellen, der auch in nicht EU Ländern wie den USA oder Japan genutzt wird.",
                 "",
-                "Entwickluing des Acts:",
+                "## Entwickluing des Acts:",
                 "Bei der Entwicklung des EU AI Act handelt es sich um einen komplexen bürokratischen Prozess, der sich nicht nur über viel Jahre hinweg entwickelt, sondern auch große Teile des parlamentarischen EU Apparats durchlaufen hat.",
                 "- Der erste Schritt dieses Prozesses war 2021 ein erster Vorschlag zur Regulierung von künstlicher Intelligenz durch die EU Kommission.",
                 "- Im November 2021 entsteht ein erster Kompromisstext, der u.A. gesamtgesellschaftlich relevante Anwendungsfälle wie Social Scoring Systeme oder biometrische Erkennungssystem beinhaltet.",
@@ -17,7 +17,7 @@ export const TextData = {
                 "- Mit Beginn von 2024 wird das Europäische Büro für künstliche Intelligenz innerhalb der Kommission eingerichtet und weitere Prozesse für die schrittweise Umsetzung und Ausgestaltung des EU AI Acts angestoßen.",
                 "Ein vollständige Übersicht des zeitlichen Verlaufs des Gestaltungsprozesses und der damit verbundenen Institutionen und Zwischenstände finden Sie hier: https://artificialintelligenceact.eu/de/entwicklungen/.",
                 "",
-                "Vergleich mit anderen Ländern / Regionen:",
+                "## Vergleich mit anderen Ländern / Regionen:",
                 "Betrachtet man den EU AI Act als groß angelegte Normierung innerhalb des europäischen Raums, drängt sich schnell die Frage auf welche Auswirkungen die Gesetzgebung außerhalb seiner Mitgliedsstaaten haben wird. Es kann dabei davon ausgegangen werden, dass das EU Parlament zwar primär die Regulierung im eigenen Legislaturbereich im Blick hat, aber auch auf andere große Volkswirtschaften wie die USA, China und das Vereinigte Königreich schaut, wenn es um den Einsatz von KI geht. Wie schon bei der Datenschutz Grundverordnung (DSGVO) scheint hier der Gedanke einen weitreichenden \"Goldstandard\" zu schaffen der auch die Gesetzgebung in den Nationen außerhalb der EU bestimmt. Wir halten es deshalb für sinnvoll einen kurzen Blick auf den aktuellen Stand der KI Regulierung in den anderen Nationen zu werfen, um diese Vorstellung besser einordnen zu können. Schaut man dazu beispielsweise über den Kanal ins Vereinigte Königreich so stellt man fest, dass auch dort weitreichende Maßnahmen für die Regulierung und den ethischen Umgang mit KI bereits getroffen worden sind. Die britische Regierung setzt dabei auf bestehende sektorale Vorgaben wie bspw. die KI Prinzipien der OECD oder die Empfehlung zu ehtischem Umgang mit KI der UNESCO. Diese Übergeordneten Richtlinien werden durch lokal angetriebene Maßnahmen erweitert. Von besonderer Bedeutung ist dabei zum Beispiel die Bletchley Declaration aus November 2023 bei der sich 28 Länder, darunter die Vereinigten Staaten, China und die Europäische Union geeinigt haben international bei der Bewältigung von Herausforderungen und Risiken im Bereich der KI zusammenzuarbeiten. Im Fokus standen dabei vor allem \"frontier\", Systeme, also KI Grundlagenmodelle, die für alle möglichen Anwendungsfälle nutzbar gemacht werden können so wie bspw. die ChatGPT zugrundeliegenden LLMs.",
             ]}
         ]

@@ -15,10 +15,6 @@ const SubTopicPage = () => {
   const contentNames = Object.keys(topicContents[subtopicId]);
   const [hasSectionThree, setHasSectionThree] = useState(true);
 
-  const [videoContent, setVideoContent] = useState({ link: "", title: "" });
-  const [sectionTwoText, setSectionTwoText] = useState("lorem ipsum :)");
-  const [sectionThreeText, setSectionThreeText] = useState("lorem ipsum :)");
-
   const [initialScrollDone, setInitialScrollDone] = useState(false);
   const [showToTopBtn, setShowToTopBtn] = useState(false);
 
@@ -69,15 +65,6 @@ const SubTopicPage = () => {
     }
   };
 
-  // set specific content according to subTopic
-  useEffect(() => {
-    setVideoContent(topicContents[subtopicId][contentNames[0]]);
-    setSectionTwoText(topicContents[subtopicId][contentNames[1]]);
-    hasSectionThree &&
-      setSectionThreeText(topicContents[subtopicId][contentNames[2]]);
-    console.log("subtopicID: " + subtopicId);
-  }, [subtopicId, topicContents, contentNames, hasSectionThree]);
-
   useEffect(() => {
     const calculateHeightVideo = () => {
       if (videoRef.current) {
@@ -117,8 +104,8 @@ const SubTopicPage = () => {
         {isVideoAnimation.Video && (
           <iframe
             ref={videoRef}
-            src={videoContent.link}
-            title={videoContent.title}
+            src={textData.VideoLink}
+            title={"Einführungsvideo"}
             allowFullScreen
             style={{
               border: "0",
@@ -136,12 +123,21 @@ const SubTopicPage = () => {
             {textData.Texte[0].title}
           </p>
           <p className="text">
-            {textData.Texte[0].texts.map((item, index) => (
-              <React.Fragment key={index}>
-                {item}
-                <br />
-              </React.Fragment>
-            ))}
+            {textData.Texte[0].texts.map((item, index) => {
+                  if (item.startsWith('## ')) {
+                    return (
+                      <p className="mt-5 text-lg" key={index}>
+                        {item.slice(3)}
+                      </p>
+                    )
+                  } else {
+                    return (
+                      <p className="" key={index}>
+                        {item}
+                      </p>
+                    )
+                  }
+                })}
           </p>
         </div>
         {isVideoAnimation.Animation && (
@@ -158,14 +154,23 @@ const SubTopicPage = () => {
               <p className="h2 mb-10 mt-14 text-center">
                 {textData.Texte[1].title}
               </p>
-              <p className="text">
-                {textData.Texte[1].texts.map((item, index) => (
-                  <React.Fragment key={index}>
-                    {item}
-                    <br />
-                  </React.Fragment>
-                ))}
-              </p>
+              <div className="text">
+                {textData.Texte[1].texts.map((item, index) => {
+                  if (item.startsWith('## ')) {
+                    return (
+                      <p className="mt-5 text-lg" key={index}>
+                        {item.slice(3)}
+                      </p>
+                    )
+                  } else {
+                    return (
+                      <p key={index}>
+                        {item}
+                      </p>
+                    )
+                  }
+                })}
+              </div>
             </div>
           ) : null}
           {subtopicId === "Fazit" && (
@@ -180,7 +185,7 @@ const SubTopicPage = () => {
               <iframe
                 ref={websiteRef}
                 src={"https://tinobreier.github.io/dos-and-donts/#/interaktiv"}
-                title={videoContent.title}
+                title={"Interaktive Website für dos and donts bei KI"}
                 allowFullScreen
                 style={{
                     border: "0",
@@ -193,7 +198,7 @@ const SubTopicPage = () => {
                 <iframe
                 ref={websiteRef}
                 src={"https://hkuswik.github.io/quiz_uxfuerki_ba/"}
-                title={videoContent.title}
+                title={"Interaktive Website für Quizfragen für die UX von KI"}
                 allowFullScreen
                 style={{
                     border: "0",
