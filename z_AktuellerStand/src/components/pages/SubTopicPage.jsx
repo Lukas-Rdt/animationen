@@ -126,13 +126,13 @@ const SubTopicPage = () => {
             {textData.Texte[0].texts.map((item, index) => {
                   if (item.startsWith('## ')) {
                     return (
-                      <p className="mt-5 text-lg" key={index}>
+                      <p className="mt-5 text-lg text-white" key={index}>
                         {item.slice(3)}
                       </p>
                     )
                   } else {
                     return (
-                      <p className="" key={index}>
+                      <p className="text-white" key={index}>
                         {item}
                       </p>
                     )
@@ -158,13 +158,13 @@ const SubTopicPage = () => {
                 {textData.Texte[1].texts.map((item, index) => {
                   if (item.startsWith('## ')) {
                     return (
-                      <p className="mt-5 text-lg" key={index}>
+                      <p className="mt-5 text-lg text-white" key={index}>
                         {item.slice(3)}
                       </p>
                     )
                   } else {
                     return (
-                      <p key={index}>
+                      <p className="text-white" key={index}>
                         {item}
                       </p>
                     )
