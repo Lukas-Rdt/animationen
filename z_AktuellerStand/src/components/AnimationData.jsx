@@ -392,7 +392,7 @@ export const AnimationData = {
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "remove:bottom", "top:20%", "translate0"], speed: "1.5" }
+              { element: "text0", animationSelected: ["right50", "remove:bottom", "top:20", "translate0"], speed: "1.5" },
             ]
           ],
           [
@@ -427,15 +427,10 @@ export const AnimationData = {
         AnimationOrder: [
           [
             [
-              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "0.1" },
-              { element: "image", animationSelected: ["left100", "top50"], speed: "0.1" },
-            ],
-            [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50"], speed: "1.5" },
-              { element: "image", animationSelected: ["left50", "top50"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
             ],
           ],
-          // selection 1
           [
             [
               { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
@@ -446,8 +441,8 @@ export const AnimationData = {
         AnimationOrderRev: [
           [
             [
-              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "1.5" },
-              { element: "image", animationSelected: ["left100", "top50"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
             ],
           ],
           [

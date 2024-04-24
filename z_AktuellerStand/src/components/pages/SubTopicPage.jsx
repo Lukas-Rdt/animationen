@@ -124,20 +124,30 @@ const SubTopicPage = () => {
           </p>
           <p className="text">
             {textData.Texte[0].texts.map((item, index) => {
-                  if (item.startsWith('## ')) {
-                    return (
-                      <p className="mt-5 text-lg text-white" key={index}>
-                        {item.slice(3)}
-                      </p>
-                    )
-                  } else {
-                    return (
-                      <p className="text-white" key={index}>
-                        {item}
-                      </p>
-                    )
-                  }
-                })}
+              if (item.startsWith("##list ")) {
+                const listItems = item.split("##list").slice(1).map(section => section.trim());
+                console.log(listItems);
+                return (
+                  <ul className="list-disc pl-7" key={index}>
+                    {listItems.map((listItem, idx) => (
+                      <li className="text-white" key={idx}>{listItem}</li>
+                    ))}
+                  </ul>
+                );
+              } else if (item.startsWith("## ")) {
+                return (
+                  <p className="mt-5 text-lg text-white" key={index}>
+                    {item.slice(3)}
+                  </p>
+                );
+              } else {
+                return (
+                  <p className="text-white" key={index}>
+                    {item}
+                  </p>
+                );
+              }
+            })}
           </p>
         </div>
         {isVideoAnimation.Animation && (
@@ -156,57 +166,67 @@ const SubTopicPage = () => {
               </p>
               <div className="text">
                 {textData.Texte[1].texts.map((item, index) => {
-                  if (item.startsWith('## ')) {
+                  if (item.startsWith("##list ")) {
+                    const listItems = item.split("##list").slice(1).map(section => section.trim());
+                    return (
+                      <ul className="list-disc pl-7" key={index}>
+                        {listItems.map((listItem, idx) => (
+                          <li className="text-white" key={idx}>{listItem}</li>
+                        ))}
+                      </ul>
+                    );
+                  } else if (item.startsWith("## ")) {
                     return (
                       <p className="mt-5 text-lg text-white" key={index}>
                         {item.slice(3)}
                       </p>
-                    )
+                    );
                   } else {
                     return (
                       <p className="text-white" key={index}>
                         {item}
                       </p>
-                    )
+                    );
                   }
                 })}
               </div>
             </div>
           ) : null}
           {subtopicId === "Fazit" && (
-            <div style={{
+            <div
+              style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100%",
                 height: "100%",
-            }}>
+              }}>
               <iframe
                 ref={websiteRef}
                 src={"https://tinobreier.github.io/dos-and-donts/#/interaktiv"}
                 title={"Interaktive Website für dos and donts bei KI"}
                 allowFullScreen
                 style={{
-                    border: "0",
-                    height: `${websiteHeight}px`,
-                    width: "80%",
-                    maxWidth: "2000px",
-                    margin: '100px',
-                    borderRadius: "20px",
+                  border: "0",
+                  height: `${websiteHeight}px`,
+                  width: "80%",
+                  maxWidth: "2000px",
+                  margin: "100px",
+                  borderRadius: "20px",
                 }}></iframe>
-                <iframe
+              <iframe
                 ref={websiteRef}
                 src={"https://hkuswik.github.io/quiz_uxfuerki_ba/"}
                 title={"Interaktive Website für Quizfragen für die UX von KI"}
                 allowFullScreen
                 style={{
-                    border: "0",
-                    height: `${websiteHeight}px`,
-                    width: "80%",
-                    maxWidth: "2000px",
-                    margin: '100px',
-                    borderRadius: "20px",
+                  border: "0",
+                  height: `${websiteHeight}px`,
+                  width: "80%",
+                  maxWidth: "2000px",
+                  margin: "100px",
+                  borderRadius: "20px",
                 }}></iframe>
             </div>
           )}

@@ -9,12 +9,6 @@ function AnimationContainer({ topicName }) {
 
   const animationDataContent = AnimationData[topicName];
 
-  /**
-   * 1 = title + graphic
-   * 2 = move title up
-   * 3 = loop with texts
-   * 4 = remove all + increase progress
-   */
   const [animationSelection, setAnimationSelection] = useState(0);
   // Progress in the module
   const [progress, setProgress] = useState(0);
@@ -82,38 +76,23 @@ function AnimationContainer({ topicName }) {
     let usedProgress = progress;
     let usedAnimationSelection;
     if (direction === "next") {
-      console.log("\nCASE NEXT", 'color: blue; font-size: 20px;')
-      console.log(animationDataContent.Content.length - 1);
-      console.log(animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length)
       if (usedProgress === animationDataContent.Content.length - 1 && animationSelection === animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length) {
         return;
       }
       usedAnimationSelection = animationSelection;
     } else if (direction === "back" && animationSelection === 0) {
-      console.log('%cCASE PROGRESS - 1', 'color: blue; font-size: 20px;');
-      console.log("selection: ", usedAnimationSelection);
       usedAnimationSelection = animationDataContent.Content[usedProgress - 1].AnimationOrder.length - 1;
-      console.log("after ne aplly: ", usedAnimationSelection);
-      console.log("usedProgress - 1. order:");
-      console.log(animationDataContent.Content[usedProgress - 1].AnimationOrder);
       setAnimationSelection(usedAnimationSelection);
       usedProgress = progress - 1;
       setProgress(usedProgress);
     } else {
-      console.log("\n CASE DEAFULT SELECTION - 1", 'color: blue; font-size: 20px;');
       usedAnimationSelection = animationSelection - 1;
       setAnimationSelection(usedAnimationSelection);
     }
-    console.log("now animation value used:");
-    console.log(usedAnimationSelection);
 
-    console.log("now used progress value:");
-    console.log(usedProgress);
-
+    // gets next or last animation
     const animationData = direction === "next" ? animationDataContent.Content[usedProgress].AnimationOrder[usedAnimationSelection] : animationDataContent.Content[usedProgress].AnimationOrderRev[usedAnimationSelection];
 
-
-    console.log(animationDataContent.Content[usedProgress].AnimationOrder[usedAnimationSelection]);
     for (let i = 0; i < animationData.length; i++) {
 
       for (let j = 0; j < animationData[i].length; j++) {
@@ -168,6 +147,13 @@ function AnimationContainer({ topicName }) {
                 }))
                 break;
               case "right":
+                animationPromises.push(controller.start({
+                  ...animations.top(animationValue),
+                  transition: {
+                    duration: speed,
+                    ease: "easeInOut"
+                  }
+                }))
                 break;
               default:
                 break;
@@ -184,7 +170,6 @@ function AnimationContainer({ topicName }) {
         }
       }
       await Promise.all(animationPromises);
-      console.log("animationen durchgeführt");
     }
     if (direction === "next") {
       const newSelect = animationSelection + 1;
@@ -197,9 +182,6 @@ function AnimationContainer({ topicName }) {
   }
 
   useEffect(() => {
-    console.log("useEffect:");
-    console.log("Effect selection: ", animationSelection);
-    console.log("Progress: ", progress);
   }, [animationSelection, progress])
 
   // assignment to animation controller
