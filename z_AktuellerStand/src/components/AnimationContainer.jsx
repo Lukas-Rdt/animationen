@@ -21,7 +21,7 @@ function AnimationContainer({ topicName }) {
     `calc(40% + 150px)`,
   ]);
 
-  // Case 2 adds current top values if not there already
+  // Could be removed
   const [textValuesHistory, setTextValuesHistory] = useState([]);
 
   const updateTextTopValues = (index, newValue) => {
