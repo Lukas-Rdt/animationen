@@ -1,15 +1,14 @@
 import exampleImg from '../assets/images/exampleImg.gif';
-import bild1Example from '../assets/images/Bild1.gif';
-import bild1 from '../assets/images/Bild1.png';
-import bild2 from '../assets/images/Bild2.png';
-import bild3 from '../assets/images/Bild3.png';
-import bild4 from '../assets/images/Bild4.png';
-import bild5 from '../assets/images/Bild5.png';
-import bild6 from '../assets/images/Bild6.png';
-import bild7 from '../assets/images/Bild7.png';
-import bild8 from '../assets/images/Bild8.png';
-import bild9 from '../assets/images/Bild9.png';
-import bild10 from '../assets/images/Bild10.png';
+import bild1 from '../assets/images/demo/Bild1.png';
+import bild2 from '../assets/images/demo/Bild2.png';
+import bild3 from '../assets/images/demo/Bild3.png';
+import bild4 from '../assets/images/demo/Bild4.png';
+import bild5 from '../assets/images/demo/Bild5.png';
+import bild6 from '../assets/images/demo/Bild6.png';
+import bild7 from '../assets/images/demo/Bild7.png';
+import bild8 from '../assets/images/demo/Bild8.png';
+import bild9 from '../assets/images/demo/Bild9.png';
+import bild10 from '../assets/images/demo/Bild10.png';
 
 export const AnimationData = {
   Einleitung: {
@@ -374,45 +373,101 @@ export const AnimationData = {
       {
         Image: { typeImg: "image", src: exampleImg, alt: "Bild 1" },
         Texts: [
-          { typeText: "titel", string: "Text 1" },
+          { typeText: "titel", string: "Text 0" },
+          { typeText: "text", string: "Text 1" },
           { typeText: "text", string: "Text 2" },
           { typeText: "text", string: "Text 3" },
-          { typeText: "text", string: "Text 4" },
         ],
         AnimationOrder: [
           [
             [
-              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "0.1" },
+              { element: "text0", animationSelected: ["right100", "remove:bottom", "top50", "translateMinus50"], speed: "0.1" },
               { element: "image", animationSelected: ["left100", "top50"], speed: "0.1" },
             ],
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50"], speed: "1.5" },
               { element: "image", animationSelected: ["left50", "top50"], speed: "1.5" },
             ],
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "remove:bottom", "top:20", "translate0"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50"], speed: "0.1" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "translate0"], speed: "1.5" },
+            ],
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:50%", "translateMinus50", "hide"], speed: "0.1" },
+              { element: "text2", animationSelected: ["right50", "move:top:60%", "translateMinus50", "hide"], speed: "0.1" },
+              { element: "text3", animationSelected: ["right50", "move:top:70%", "translateMinus50", "hide"], speed: "0.1" },
             ]
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "translate0", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "translate0", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text3", animationSelected: ["right50", "move:top:50%", "translate0", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
               { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "hide"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "1.5" },
+              { element: "text3", animationSelected: ["right50", "move:top:50%", "hide"], speed: "1.5" },
             ]
           ],
         ],
         AnimationOrderRev: [
           [
             [
-              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right100", "move:top:50%", "translateMinus50"], speed: "1.5" },
               { element: "image", animationSelected: ["left100", "top50"], speed: "1.5" },
             ],
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:50%", "translateMinus50"], speed: "1.5" },
+            ],
+          ],
+          [
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:50%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:60%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "text3", animationSelected: ["right50", "move:top:70%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "0.1" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "hide"], speed: "0.1" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "0.1" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "0.1" },
+              { element: "text3", animationSelected: ["right50", "move:top:50%", "hide"], speed: "0.1" },
+            ],
+            [
               { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "show"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "show"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "show"], speed: "1.5" },
+              { element: "text3", animationSelected: ["right50", "move:top:50%", "show"], speed: "1.5" },
             ],
           ]
         ]
@@ -427,71 +482,175 @@ export const AnimationData = {
         AnimationOrder: [
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50"], speed: "0.1" },
+              { element: "image", animationSelected: ["left50", "top50"], speed: "0.1" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50", "show"], speed: "1.5" },
               { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
             ],
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50"], speed: "0.1" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "translate0"], speed: "1.5" },
+            ],
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:50%", "translateMinus50", "hide"], speed: "0.1" },
+              { element: "text2", animationSelected: ["right50", "move:top:60%", "translateMinus50", "hide"], speed: "0.1" },
+            ]
+          ],
+          [
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "translate0", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "translate0", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
               { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "hide"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "1.5" },
             ]
           ],
         ],
         AnimationOrderRev: [
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:50%", "translateMinus50", "hide"], speed: "1.5" },
               { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
             ],
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:50%", "translateMinus50"], speed: "1.5" },
+            ],
+          ],
+          [
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:50%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:60%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "0.1" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "translate0", "hide"], speed: "0.1" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "0.1" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "0.1" },
+            ],
+            [
               { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "show"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "show"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "show"], speed: "1.5" },
             ],
           ]
         ]
       },
       {
-        Image: { typeImg: "image", src: exampleImg, alt: "Bild 3" },
+        Image: { typeImg: "image", src: bild3, alt: "Bild 3" },
         Texts: [
-          { typeText: "titel", string: "Text 1" },
-          { typeText: "titel", string: "Text 2" },
+          { typeText: "title", string: "Text 1" },
+          { typeText: "text", string: "Text 2" },
           { typeText: "text", string: "Text 3" },
-          { typeText: "titel", string: "Text 4" },
-          { typeText: "titel", string: "Text 5" },
         ],
         AnimationOrder: [
           [
             [
-              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "0.1" },
-              { element: "image", animationSelected: ["left100", "top50"], speed: "0.1" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50"], speed: "0.1" },
+              { element: "image", animationSelected: ["left50", "top50"], speed: "0.1" },
             ],
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50"], speed: "1.5" },
-              { element: "image", animationSelected: ["left50", "top50"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50", "show"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
             ],
           ],
-          // selection 1
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "hide"], speed: "1.5" },
-              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "top50", "translateMinus50"], speed: "0.1" },
+            ],
+            [
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "translate0"], speed: "1.5" },
+            ],
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:50%", "translateMinus50", "hide"], speed: "0.1" },
+              { element: "text2", animationSelected: ["right50", "move:top:60%", "translateMinus50", "hide"], speed: "0.1" },
             ]
+          ],
+          [
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "translate0", "show"], speed: "1.5" },
+            ]
+          ],
+          [
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "translate0", "show"], speed: "1.5" },
+            ],
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "translate0", "show"], speed: "1.5" },
+            ],
+          ],
+          [
+            [
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "hide"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "1.5" },
+            ],
+            [
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "hide"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "1.5" },
+            ],
           ],
         ],
         AnimationOrderRev: [
           [
             [
-              { element: "text0", animationSelected: ["right100", "bottom50", "translate50"], speed: "1.5" },
-              { element: "image", animationSelected: ["left100", "top50"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:50%", "translateMinus50", "hide"], speed: "1.5" },
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "1.5" },
             ],
           ],
           [
             [
-              { element: "text0", animationSelected: ["right50", "bottom50", "translate50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:50%", "translateMinus50"], speed: "1.5" },
+            ],
+          ],
+          [
+            [
+              { element: "text1", animationSelected: ["right50", "move:top:50%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "text2", animationSelected: ["right50", "move:top:60%", "hide"], speed: "1.5" },
+            ], 
+          ],
+          [
+            [
+              { element: "image", animationSelected: ["left50", "top50", "hide"], speed: "0.1" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "translate0", "hide"], speed: "0.1" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "hide"], speed: "0.1" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "hide"], speed: "0.1" },
+            ],
+            [
               { element: "image", animationSelected: ["left50", "top50", "show"], speed: "1.5" },
+              { element: "text0", animationSelected: ["right50", "move:top:20%", "show"], speed: "1.5" },
+              { element: "text1", animationSelected: ["right50", "move:top:30%", "show"], speed: "1.5" },
+              { element: "text2", animationSelected: ["right50", "move:top:40%", "show"], speed: "1.5" },
             ],
           ]
         ]

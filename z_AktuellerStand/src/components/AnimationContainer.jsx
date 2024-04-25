@@ -49,13 +49,11 @@ function AnimationContainer({ topicName }) {
       if (animationSelection === 0 && progress !== 0) {
         setProgress((prevProgress) => prevProgress - 1);
       }
-      nextAnimation("back");
-      //backwardAnimations();
-      //lastAnimation();
+      //nextAnimation("back");
+      console.log(animationDataContent)
     } else if (event.key === "ArrowRight") {
       nextAnimation("next");
       explanationController.start(animations.hide);
-      //forwardAnimation();
     }
   };
 
@@ -67,16 +65,13 @@ function AnimationContainer({ topicName }) {
     }
   })
 
-  // WHEN BACK ANIMATION JUST DO ANIMATIONSELECTION - 1 
-  /**
-   * TEMPORARY SOLUTION FOR PRESENTATION - MIGHT BECOME PERMAMENT
-   */
   const nextAnimation = async (direction) => {
     const animationPromises = [];
     let usedProgress = progress;
     let usedAnimationSelection;
     if (direction === "next") {
-      if (usedProgress === animationDataContent.Content.length - 1 && animationSelection === animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length) {
+      // es war (eigentlich falsch, ging auch nicht mehr woanders): animationSelection === animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder[animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1].length
+      if (usedProgress === animationDataContent.Content.length - 1 && animationSelection === animationDataContent.Content[animationDataContent.Content.length - 1].AnimationOrder.length - 1) {
         return;
       }
       usedAnimationSelection = animationSelection;
@@ -111,12 +106,14 @@ function AnimationContainer({ topicName }) {
           if (animationSelected.includes(":")) {
             const stringParts = animationSelected.split(":");
             const animationMethod = stringParts[0];
-            const animationValue = stringParts[1];
+            const animationValue = stringParts.slice(1).join(":");
+            console.log("danach: " + animationValue);
 
             // special cases where a parameter needs to be passed
             switch (animationMethod) {
               // special case if a anchor (top, right, bottom, left) needs to be removed for another to be in effect
               case "remove":
+                console.log("case remove");
                 animationPromises.push(controller.start({
                   ...animations.unset(animationValue),
                   transition: {
@@ -126,6 +123,7 @@ function AnimationContainer({ topicName }) {
                 }))
                 break;
               case "color":
+                console.log("case color");
                 animationPromises.push(controller.start({
                   ...animations.color(animationValue),
                   transition: {
@@ -134,21 +132,15 @@ function AnimationContainer({ topicName }) {
                   }
                 }))
                 break;
-              // TODO: collapse cases
-              case "top":
-                console.log('%cCASE TOP: ', 'font-size: 20px');
-                console.log(animationValue);
+              case "move":
+                console.log("case move");
+                const moveParts = animationValue.split(":");
+                const direction = moveParts[0];
+                const moveValue = moveParts[1];
+                console.log("direction: " + direction);
+                console.log("moveValue: " + moveValue);
                 animationPromises.push(controller.start({
-                  ...animations.top(animationValue),
-                  transition: {
-                    duration: speed,
-                    ease: "easeInOut"
-                  }
-                }))
-                break;
-              case "right":
-                animationPromises.push(controller.start({
-                  ...animations.top(animationValue),
+                  ...animations.move(direction, moveValue),
                   transition: {
                     duration: speed,
                     ease: "easeInOut"
@@ -158,26 +150,31 @@ function AnimationContainer({ topicName }) {
               default:
                 break;
             }
+          } else {
+            console.log("default case: " + animationSelected);
+            animationPromises.push(controller.start({
+              ...animations[animationSelected],
+              transition: {
+                duration: speed,
+                ease: "easeInOut"
+              }
+            }))
           }
-
-          animationPromises.push(controller.start({
-            ...animations[animationSelected],
-            transition: {
-              duration: speed,
-              ease: "easeInOut"
-            }
-          }))
         }
       }
       await Promise.all(animationPromises);
     }
     if (direction === "next") {
       const newSelect = animationSelection + 1;
+      console.log("is next selection now");
       setAnimationSelection(newSelect);
     }
     if (direction === "next" && animationSelection === animationDataContent.Content[progress].AnimationOrder.length - 1) {
       setProgress((prevProgress) => prevProgress + 1);
       setAnimationSelection(0);
+      // FIXME: find a way to resolve
+      // recursive here brings error: cant read image, text, ... 
+      //nextAnimation("next");
     }
   }
 
